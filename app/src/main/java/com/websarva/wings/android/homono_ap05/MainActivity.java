@@ -5,12 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -49,6 +46,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Toast.makeText(self, "駅が選択されていません", Toast.LENGTH_SHORT).show();
             return;
         }
+        //緯度経度をげっとしてページ遷移する
     }
 
     @Override
@@ -59,10 +57,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         // アイテムを取得してリクエストにセット
         HashMap<String, String> item = (HashMap<String, String>) adapterView.getAdapter().getItem(i);
+        String sentCode = "1";
         Bundle bundle = new Bundle();
-        bundle.putString("name", item.get("name"));
+        //bundle.putString("code", item.get("code"));
+        //暫定
+        bundle.putString("code",sentCode);
         // 実行するメソッドを設定
-        int loaderId = -1;
+        int loaderId = 0;
         switch (adapterView.getId()) {
             case R.id.PrefSpinner:
                 loaderId = EkidataLoader.PREFECTURES;
@@ -74,6 +75,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 loaderId = EkidataLoader.STATIONS;
                 break;
         }
+        //レファレンスに使っちゃダメとか書いてないのになんだお前ーーーーー
+        getSupportLoaderManager().initLoader(loaderId, bundle, self);
     }
 
     @Override
@@ -99,14 +102,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         // 取得したデータを対象のSpinnerにセットする
         SimpleAdapter adapter = new SimpleAdapter(
                 self, list, android.R.layout.simple_spinner_item,
-                new String[] {"name"}, new int[] {android.R.id.text1});
+                new String[] {"code"}, new int[] {android.R.id.text1});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         switch (loader.getId()) {
-            case EkidataLoader.LINES:
+            case EkidataLoader.PREFECTURES:
+                //配列をつくってEkidataのstationいれて
                 lineSpinner.setAdapter(adapter);
                 lineSpinner.setOnItemSelectedListener(self);
                 break;
-            case EkidataLoader.STATIONS:
+            case EkidataLoader.LINES:
                 staSpinner.setAdapter(adapter);
                 break;
         }
