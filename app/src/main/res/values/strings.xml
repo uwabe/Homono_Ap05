@@ -6,6 +6,7 @@
     <string name="StaName">駅名</string>
     <string name="SearchStartButton">検索する</string>
     <string-array name="pref_list">
+        <item>選択してください</item>>
         <item>北海道</item>
         <item>青森県</item>
         <item>岩手県</item>
