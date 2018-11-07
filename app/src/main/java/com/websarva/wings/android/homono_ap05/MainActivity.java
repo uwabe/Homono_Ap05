@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,9 +32,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         lineSpinner = findViewById(R.id.LineSpinner);
         staSpinner = findViewById(R.id.StaSpinner);
 
-        prefSpinner.setOnItemSelectedListener(self);
-        lineSpinner.setOnItemSelectedListener(self);
-        staSpinner.setOnItemSelectedListener(self);
+        //prefSpinner.setOnItemSelectedListener(self);
+        //lineSpinner.setOnItemSelectedListener(self);
+        //staSpinner.setOnItemSelectedListener(self);
+        String[] labels = getResources().getStringArray(R.array.pref_list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(self,android.R.layout.simple_spinner_item,labels);
+        prefSpinner.setAdapter(adapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         findViewById(R.id.SearchStartButton).setOnClickListener(self);
         getSupportFragmentManager();
@@ -100,6 +105,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         // 取得したデータを対象のSpinnerにセットする
+        // この辺書き直す
         SimpleAdapter adapter = new SimpleAdapter(
                 self, list, android.R.layout.simple_spinner_item,
                 new String[] {"code"}, new int[] {android.R.id.text1});
