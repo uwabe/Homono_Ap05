@@ -1,5 +1,6 @@
+package com.websarva.wings.android.homono_ap05;
+
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.json.JSONArray;
@@ -28,41 +29,48 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
     private static final String TAG = EkidataLoader.class.getSimpleName();
 
     /** パラメータにつける名前(都道府県or路線). */
-    private String mName;
+    private String pCode;
 
     // コンストラクタ
-    public EkidataLoader(Context context, String name){
+    public EkidataLoader(Context context, String code){
         super(context);
-        mName = name;
+        pCode = code;
         forceLoad();
     }
 
     @Override
     public ArrayList<HashMap<String, String>> loadInBackground() {
         ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String, String>>();
-        JSONObject jsonObject = get(mName);
+        JSONObject jsonObject = get(pCode);
 
         if(jsonObject != null){
-            // "選択してください"アイテムを先頭に追加
+            /* "選択してください"アイテムを先頭に追加
             HashMap<String, String> notSelected = new HashMap<String, String>();
             notSelected.put("name", "選択してください");
-            list.add(notSelected);
+            list.add(notSelected);   */
             try{
                 //取得したJSONからデータをとりだす
                 //緑字のところは外部APIの名前のキーを
-                JSONObject response = jsonObject.getJSONObject("line"); //case分の中?responseではなく別の名前に
-                JSONArray jsonArray = null;
+                //JSONObject response = jsonObject.getJSONObject("line");
+                JSONArray jsonArray = jsonObject.getJSONArray("line");
+                //JSONArray jsonArray = null;
                 switch (getId()){
                     case PREFECTURES:
-                        jsonArray = response.getJSONArray("line_cd");
+                        //jsonArray = response.getJSONArray("line_cd");
                         for(int i =0; i< jsonArray.length(); i++){
                             HashMap<String,String> station = new HashMap<String, String>();
-                            station.put("name",jsonArray.getString(i));
+                            JSONObject data = jsonArray.getJSONObject(i);
+                            String line_cd = data.getString("line_cd");
+                            String line_name = data.getString("line_name");
+                            station.put(line_cd,line_name);
+                            //station.put("line_cd",jsonArray.getString(i));
+                            //station.put("line_name",jsonArray.getString(i));
                             list.add(station);
                         }
                         break;
+                        //都道府県ができたらいい感じに書き直す
                     case LINES:
-                        jsonArray = response.getJSONArray("station_l");
+                        //jsonArray = response.getJSONArray("station_l");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             HashMap<String, String> station = new HashMap<String, String>();
                             station.put("name", jsonArray.getString(i));
@@ -70,7 +78,7 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
                         }
                         break;
                     case STATIONS:
-                        jsonArray =response.getJSONArray("station");
+                        //jsonArray =response.getJSONArray("station");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject item = jsonArray.getJSONObject(i);
                             HashMap<String, String> station = new HashMap<String, String>();
@@ -90,13 +98,13 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
 
     /**
      * Getリクエストを実行してBodyを取得する.
-     * @param name パラメータにつける名前(エリアor都道府県or路線)
+     * @param code パラメータにつける名前(エリアor都道府県or路線)
      * @return JSONObject
      */
-    private JSONObject get(String name) {
+    private JSONObject get(String code) {
         HttpURLConnection httpURLConnection = null;
         InputStream inputStream = null;
-        String urlStr = "http://www.ekidata.jp/api/" + getParams(name) + ".json";
+        String urlStr = "http://www.ekidata.jp/api/" + getParams(code) + ".json";
         try {
             URL url = new URL(urlStr);
             httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -124,17 +132,17 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
 
     /**
      * URLパラメータを返す.
-     * @param name パラメータにつける名前(エリアor都道府県or路線)
+     * @param code パラメータにつける名前(エリアor都道府県or路線)
      * @return URLパラメータ
      */
-    private String getParams(String name) {
+    private String getParams(String code) {
         switch (getId()) {
             case PREFECTURES:
-                return "/p/" + name;
+                return "/p/" + code;
             case LINES:
-                return "/l/" + name;
+                return "/l/" + code;
             case STATIONS:
-                return "/s/" + name;
+                return "/s/" + code;
         }
         return null;
     }
