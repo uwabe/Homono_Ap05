@@ -16,9 +16,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>>{
+public class StationSearch extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<ArrayList<HashMap<String, String>>>{
 
-    private final MainActivity self = this;
+    private final StationSearch self = this;
 
     private Spinner prefSpinner;
     private Spinner lineSpinner;
@@ -27,7 +27,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_station_search);
         prefSpinner = findViewById(R.id.PrefSpinner);
         lineSpinner = findViewById(R.id.LineSpinner);
         staSpinner = findViewById(R.id.StaSpinner);
@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         findViewById(R.id.SearchStartButton).setOnClickListener(self);
-        getSupportFragmentManager();
+        getSupportLoaderManager().initLoader(EkidataLoader.PREFECTURES,null,self);
     }
 
     @Override
@@ -103,23 +103,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Toast.makeText(self, "エラー", Toast.LENGTH_SHORT).show();
             return;
         }
+        ArrayList<HashMap<String,String>> list_1 = new ArrayList<HashMap<String, String>>(list);
 
-        // 取得したデータを対象のSpinnerにセットする
-        // この辺書き直す
+        // このあたりの書き方が謎い
         SimpleAdapter adapter = new SimpleAdapter(
-                self, list, android.R.layout.simple_spinner_item,
+                self, list_1, android.R.layout.simple_spinner_item,
                 new String[] {"code"}, new int[] {android.R.id.text1});
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         switch (loader.getId()) {
             case EkidataLoader.PREFECTURES:
-                //配列をつくってEkidataのstationいれて
+
                 lineSpinner.setAdapter(adapter);
                 lineSpinner.setOnItemSelectedListener(self);
                 break;
             case EkidataLoader.LINES:
-                staSpinner.setAdapter(adapter);
+                //staSpinner.setAdapter(adapter);
                 break;
         }
+        getSupportLoaderManager().destroyLoader(loader.getId());
 
     }
 

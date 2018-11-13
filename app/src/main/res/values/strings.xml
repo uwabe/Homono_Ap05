@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">駅名検索</string>
+    <string name="app_name">画面</string>
+    <string name="menu1">現在地</string>
+    <string name="menu2">お気に入り</string>
+    <string name="menu3">駅から</string>
     <string name="text1">●駅を選択してください</string>
     <string name="PrefName">都道府県</string>
     <string name="LineName">路線</string>
@@ -61,4 +64,5 @@
     <string-array name="sta_list">
         <item>　</item>
     </string-array>
+
 </resources>
