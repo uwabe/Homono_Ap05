@@ -38,6 +38,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
         //駅
+        //なーーぜーーかーーエラーーになるーーー
         Button menubtn3 =findViewById(R.id.button3);
         menubtn3.setOnClickListener(new View.OnClickListener() {
             @Override
