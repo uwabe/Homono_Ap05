@@ -31,14 +31,14 @@ public class MainMenu extends AppCompatActivity {
         menubtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(MainMenu.this, お気に入り.class);
-                //startActivity(intent);
                 Log.i("log1","お気に入りが押されたー");
+                Intent intent = new Intent(MainMenu.this, FavoriteSearch.class);
+                startActivity(intent);
             }
         });
 
         //駅
-        //なーーぜーーかーーエラーーになるーーー
+        //なーーぜーーかーーエラーーになるーーーはーーーー???Fragmentだからかーーー??????
         Button menubtn3 =findViewById(R.id.button3);
         menubtn3.setOnClickListener(new View.OnClickListener() {
             @Override

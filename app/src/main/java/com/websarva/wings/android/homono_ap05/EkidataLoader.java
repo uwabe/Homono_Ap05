@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+//非同期通信クラス
 public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, String>>> {
 
     /** 都道府県ID. */
@@ -60,6 +60,7 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
                         for(int i =0; i< jsonArray.length(); i++){
                             HashMap<String,String> station = new HashMap<String, String>();
                             JSONObject data = jsonArray.getJSONObject(i);
+                            //ここで整形してるとおもったけど違う?
                             String line_cd = data.getString("line_cd");
                             String line_name = data.getString("line_name");
                             station.put(line_cd,line_name);
@@ -98,8 +99,9 @@ public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, Str
 
     /**
      * Getリクエストを実行してBodyを取得する.
-     * @param code パラメータにつける名前(エリアor都道府県or路線)
+     * @param code パラメータにつける名前(都道府県or路線)
      * @return JSONObject
+     * ここでconnectionしてる
      */
     private JSONObject get(String code) {
         HttpURLConnection httpURLConnection = null;

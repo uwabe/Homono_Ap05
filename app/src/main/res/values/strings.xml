@@ -64,5 +64,10 @@
     <string-array name="sta_list">
         <item>　</item>
     </string-array>
+    <!--<string-array name="db_list">
+        <item>仮</item>
+        <item>仮2</item>
+    </string-array>-->
+    <string name="text2">お気に入りないよ</string>
 
 </resources>
