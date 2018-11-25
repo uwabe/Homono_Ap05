@@ -51,4 +51,9 @@ public class FavoriteSearch extends AppCompatActivity {
 
         }
     }*/
+    //フッターボタン押下
+    public void onMenuButtonClick(View view){
+        //メインメニュー画面に戻る
+        finish();
+}
 }

@@ -1,10 +1,7 @@
 package com.websarva.wings.android.homono_ap05;
 
-import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,150 +10,106 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 //非同期通信クラス
-public class EkidataLoader extends AsyncTaskLoader<ArrayList<HashMap<String, String>>> {
+public class EkidataLoader extends AsyncTask<String, String, String> {
 
-    /** 都道府県ID. */
-    public static final int PREFECTURES = 1;
-    /** 路線ID. */
-    public static final int LINES = 2;
-    /** 駅ID. */
-    public static final int STATIONS = 3;
-
-    /** Logcat出力用タグ. */
-    private static final String TAG = EkidataLoader.class.getSimpleName();
-
-    /** パラメータにつける名前(都道府県or路線). */
-    private String pCode;
+    private StationSearch _ss;
+    private String spinner_name = "";
 
     // コンストラクタ
-    public EkidataLoader(Context context, String code){
-        super(context);
-        pCode = code;
-        forceLoad();
+    public EkidataLoader(StationSearch ss) {
+        super();
+        _ss = ss;
     }
 
     @Override
-    public ArrayList<HashMap<String, String>> loadInBackground() {
-        ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String, String>>();
-        JSONObject jsonObject = get(pCode);
-
-        if(jsonObject != null){
-            /* "選択してください"アイテムを先頭に追加
-            HashMap<String, String> notSelected = new HashMap<String, String>();
-            notSelected.put("name", "選択してください");
-            list.add(notSelected);   */
-            try{
-                //取得したJSONからデータをとりだす
-                //緑字のところは外部APIの名前のキーを
-                //JSONObject response = jsonObject.getJSONObject("line");
-                JSONArray jsonArray = jsonObject.getJSONArray("line");
-                //JSONArray jsonArray = null;
-                switch (getId()){
-                    case PREFECTURES:
-                        //jsonArray = response.getJSONArray("line_cd");
-                        for(int i =0; i< jsonArray.length(); i++){
-                            HashMap<String,String> station = new HashMap<String, String>();
-                            JSONObject data = jsonArray.getJSONObject(i);
-                            //ここで整形してるとおもったけど違う?
-                            String line_cd = data.getString("line_cd");
-                            String line_name = data.getString("line_name");
-                            station.put(line_cd,line_name);
-                            //station.put("line_cd",jsonArray.getString(i));
-                            //station.put("line_name",jsonArray.getString(i));
-                            list.add(station);
-                        }
-                        break;
-                        //都道府県ができたらいい感じに書き直す
-                    case LINES:
-                        //jsonArray = response.getJSONArray("station_l");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            HashMap<String, String> station = new HashMap<String, String>();
-                            station.put("name", jsonArray.getString(i));
-                            list.add(station);
-                        }
-                        break;
-                    case STATIONS:
-                        //jsonArray =response.getJSONArray("station");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject item = jsonArray.getJSONObject(i);
-                            HashMap<String, String> station = new HashMap<String, String>();
-                            station.put("name", item.getString("name"));
-                            station.put("latitude", item.getString("y"));
-                            station.put("longitude", item.getString("x"));
-                            list.add(station);
-                        }
-                        break;
-                }
-            } catch(Exception e){
-                return  null;
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Getリクエストを実行してBodyを取得する.
-     * @param code パラメータにつける名前(都道府県or路線)
-     * @return JSONObject
-     * ここでconnectionしてる
-     */
-    private JSONObject get(String code) {
-        HttpURLConnection httpURLConnection = null;
-        InputStream inputStream = null;
-        String urlStr = "http://www.ekidata.jp/api/" + getParams(code) + ".json";
+    protected String doInBackground(String... strings) {
+        //スピナーの名前が0番目
+        spinner_name = strings[0];
+        String jsonData = "";
         try {
-            URL url = new URL(urlStr);
+            //インターネット接続開始
+            HttpURLConnection httpURLConnection = null;
+            URL url = null;
+            String urlDraft = "";
+            //タップされた名前のidが1番目
+            if (spinner_name == "都道府県") {
+                urlDraft = "http://www.ekidata.jp/api/p/" + strings[1] + ".json";
+            } else if (spinner_name == "路線") {
+                urlDraft = "http://www.ekidata.jp/api/l/" + strings[1] + ".json";
+                Log.e("data", "urlは"+urlDraft);
+            }
+            url = new URL(urlDraft);
             httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("GET");
+            //ここ調べる
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setInstanceFollowRedirects(false);
+            httpURLConnection.setDoInput(true);
+            //接続開始
             httpURLConnection.connect();
-            inputStream = httpURLConnection.getInputStream();
-            String body = is2String(inputStream);
-        }
-        catch(MalformedURLException e){
-        }
-        catch (IOException e){
-        }
-        finally {
-            if(httpURLConnection != null){
-                httpURLConnection.disconnect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            jsonData = is2String(inputStream);
+
+            //取得したjsonを読み取れるように改造する
+            //\はエスケープ
+            if (spinner_name == "都道府県") {
+                jsonData = jsonData.replace("if(typeof(xml)=='undefined') xml = {};xml.data =", "");
+                jsonData = jsonData.replace("if(typeof(xml.onload)=='function') xml.onload(xml.data);", "");
+                jsonData = jsonData.replace("\"line\"", "line");
+                jsonData = jsonData.replace("\"line_cd\"", "line_cd");
+                jsonData = jsonData.replace("\"line_name\"", "line_name");
+                jsonData = jsonData.replace("line_cd:", "line_cd:\"");
+                jsonData = jsonData.replace(",line_name:", "\",line_name:");
+                Log.d("Data",jsonData);
+            } else if (spinner_name == "路線") {
+                Log.d("Data",jsonData);
+                //"line_cd":11313,"line_name":"JR中央・総武線","line_lon":139.8371552268119,"line_lat":35.701641362335245,"line_zoom":10,っていうのを消さないとダメ?
+                jsonData = jsonData.replace("if(typeof(xml)=='undefined') xml = {};xml.data = ", "");
+                jsonData = jsonData.replace("if(typeof(xml.onload)=='function') xml.onload(xml.data);", "");
+                jsonData = jsonData.replace("\"station_l\"", "station_l");
+                jsonData = jsonData.replace("\"station_cd\"", "station_cd");
+                jsonData = jsonData.replace("\"station_g_cd\"", "station_g_cd");
+                jsonData = jsonData.replace("\"station_name\"", "station_name");
+                jsonData = jsonData.replace("\"lon\"", "lon");
+                jsonData = jsonData.replace("\"lat\"", "lat");
+                jsonData = jsonData.replace("station_cd:", "station_cd:\"");
+                jsonData = jsonData.replace(",station_g_cd:", "\",station_g_cd:\"");
+                jsonData = jsonData.replace(",station_name:", "\",station_name:");
+                jsonData = jsonData.replace(",lon:", ",lon:\"");
+                jsonData = jsonData.replace(",lat:", "\",lat:\"");
+                jsonData = jsonData.replace("},{station_cd:","\"},{station_cd:");
+                Log.d("Data",jsonData);
             }
-            if(inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                }
-            }
-        }return new JSONObject();
+
+            httpURLConnection = null;
+            url = null;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonData;
     }
 
-    /**
-     * URLパラメータを返す.
-     * @param code パラメータにつける名前(エリアor都道府県or路線)
-     * @return URLパラメータ
-     */
-    private String getParams(String code) {
-        switch (getId()) {
-            case PREFECTURES:
-                return "/p/" + code;
-            case LINES:
-                return "/l/" + code;
-            case STATIONS:
-                return "/s/" + code;
-        }
-        return null;
+    @Override
+    protected void onPostExecute(String result) {
+        _ss.result_job(spinner_name, result);
     }
 
-    private String is2String(InputStream inputStream) throws IOException{
+    private String is2String(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         StringBuffer stringBuffer = new StringBuffer();
-        char[] b = new char[1024];
-        int lines;
-        while (0 <= (lines = reader.read(b))){
-            stringBuffer.append(b,0,lines);
+        String st1 = "";
+        while ((st1 = reader.readLine()) != null) {
+            stringBuffer.append(st1);
+        }
+        try {
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return stringBuffer.toString();
     }
+
 }

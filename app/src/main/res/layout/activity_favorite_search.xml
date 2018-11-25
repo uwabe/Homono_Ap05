@@ -4,6 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/search_station_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF8b0000"
+        android:background="@android:drawable/bottom_bar">
+
+        <TextView
+            android:id="@+id/btMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dip"
+            android:textSize="20dp"
+            android:textColor="#FFffffff"
+            android:text="仮2" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/favorite_list"
@@ -11,4 +27,5 @@
         android:layout_height="match_parent">
         <!--android:entries="@array/db_list"> -->
     </ListView>
+    <include layout="@layout/activity_footer" android:id="@+id/bottom"/>
 </LinearLayout>

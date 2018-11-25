@@ -31,5 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         //ここに削除処理?あとで確認
+        String sql2 = "DROP TABLE IF EXISTS HMG001;";
+        db.execSQL(sql2);
     }
 }
