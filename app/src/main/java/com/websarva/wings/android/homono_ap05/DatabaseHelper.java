@@ -23,9 +23,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sb.append("lat REAL,");
         sb.append("lng REAL");
         sb.append(");");
-        String sql = sb.toString();
+        String create_sql = sb.toString();
 
-        db.execSQL(sql);
+        db.execSQL(create_sql);
     }
 
     @Override
@@ -33,5 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //ここに削除処理?あとで確認
         String sql2 = "DROP TABLE IF EXISTS HMG001;";
         db.execSQL(sql2);
+
+        onCreate(db);
+    }
+
+    public void onDowngrade(SQLiteDatabase db,int oldVersion,int newVersion){
+        onUpgrade(db,oldVersion,newVersion);
     }
 }

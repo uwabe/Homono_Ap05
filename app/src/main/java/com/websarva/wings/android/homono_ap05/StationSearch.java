@@ -146,7 +146,7 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View view) {
-        /*Intent intent = new Intent(this,SearchResult.class);
+        /*Intent intent = new Intent(this,SearchResultActivity.class);
         intent.putExtra("station_lon",station_lon);
         intent.putExtra("station_lon",station_lat);
         intent.putExtra("page_param",3);
