@@ -19,7 +19,7 @@
             android:layout_marginTop="4dip"
             android:textSize="20dp"
             android:textColor="#FFffffff"
-            android:text="仮1" />
+            android:text="駅検索じゃよ" />
     </LinearLayout>
 
     <TextView
