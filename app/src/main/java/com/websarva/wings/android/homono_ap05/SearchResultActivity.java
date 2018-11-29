@@ -58,9 +58,9 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 .fillColor(Color.RED));
 
         //GoogleMapの情報を手に入れる非同期タスクの生成
-        //final googlemaploader googlemaploader = new googlemaploader(this);
+        final GoogleDataLoader googlemaploader = new GoogleDataLoader(this);
         //実行
-        //googlemaploader.execute(lat + "," + lon);
+        googlemaploader.execute(lat + "," + lon);
 
     }
 

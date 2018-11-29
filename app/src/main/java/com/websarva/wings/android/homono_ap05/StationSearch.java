@@ -148,7 +148,7 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         /*Intent intent = new Intent(this,SearchResultActivity.class);
         intent.putExtra("station_lon",station_lon);
-        intent.putExtra("station_lon",station_lat);
+        intent.putExtra("station_lat",station_lat);
         intent.putExtra("page_param",3);
         startActivity(intent);*/
         //Toast.makeText(this, "駅が選択されていません", Toast.LENGTH_SHORT).show();

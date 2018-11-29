@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">画面</string>
+    <string name="app_name">アプリだよーー</string>
     <string name="menu1">現在地</string>
     <string name="menu2">お気に入り</string>
     <string name="menu3">駅から</string>
@@ -8,11 +8,8 @@
     <string name="LineName">路線</string>
     <string name="StaName">駅名</string>
     <string name="SearchStartButton">検索する</string>
-    <!--<string-array name="db_list">
-        <item>仮</item>
-        <item>仮2</item>
-    </string-array>-->
     <string name="text2">お気に入りないよ</string>
     <string name="bt_menu">メニューへ戻る</string>
+    <string name="google_maps_key">*</string>
 
 </resources>
