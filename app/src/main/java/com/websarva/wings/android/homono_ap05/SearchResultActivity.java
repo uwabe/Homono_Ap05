@@ -2,15 +2,22 @@ package com.websarva.wings.android.homono_ap05;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -19,14 +26,18 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static java.lang.Double.parseDouble;
 
-public class SearchResultActivity extends FragmentActivity implements OnMapReadyCallback {
+public class SearchResultActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
 
     private GoogleMap googleMap;
+    private GoogleApiClient mGoogleApiClient;
+    //private LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,8 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         setContentView(R.layout.activity_search_result);
         SupportMapFragment supportmapfragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportmapfragment.getMapAsync(this);
+
+
     }
 
     @Override
@@ -42,12 +55,17 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         // 現在のintentを取得する
         Intent intent = getIntent();
         // intentから指定キーの文字列を取得する
-        String lon = intent.getStringExtra( "station_Lon" );
+        // intenの値が渡せてない!!!!!!!
+        String lon = intent.getStringExtra( "station_lon" );
         String lat = intent.getStringExtra( "station_Lat" );
+        Log.i("Search1","現在地:"+ lon+ "&" + lat);
+        Double lon_d = parseDouble(lon);
+        Double lat_d = parseDouble(lat);
+        Log.i("Search2","現在地:"+ lon_d+ "&" + lat_d);
 
-        LatLng pos = new LatLng(parseDouble(lat), parseDouble(lon));
+        LatLng pos = new LatLng(lat_d, lon_d);
         // ズームにする
-        zoomMap(parseDouble(lat), parseDouble(lon));
+        zoomMap(lat_d, lon_d);
 
 
         // 円を描く
@@ -58,9 +76,9 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 .fillColor(Color.RED));
 
         //GoogleMapの情報を手に入れる非同期タスクの生成
-        final GoogleDataLoader googlemaploader = new GoogleDataLoader(this);
+        final GoogleDataLoader googleDataLoader = new GoogleDataLoader(this);
         //実行
-        googlemaploader.execute(lat + "," + lon);
+        googleDataLoader.execute(lat + "," + lon);
 
     }
 
@@ -140,5 +158,55 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
     public void onMenuButtonClick(View view){
         //メインメニュー画面に戻る
         finish();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+
+    }
+
+    @Override
+    public void deactivate() {
+
     }
 }

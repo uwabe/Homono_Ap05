@@ -28,6 +28,8 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
     private ArrayList<Lines> linesArrayList = new ArrayList<>();
     private ArrayList<Stations> stationsArrayList = new ArrayList<>();
 
+    String station_lon = "";
+    String station_lat = "";
 
 
     @Override
@@ -144,14 +146,18 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
     }
-    @Override
+
     public void onClick(View view) {
-        /*Intent intent = new Intent(this,SearchResultActivity.class);
+        Spinner prefSpinner = findViewById(R.id.PrefSpinner);
+        if (prefSpinner.getSelectedItemPosition()==0){
+            Toast.makeText(this, "駅が選択されていません", Toast.LENGTH_SHORT).show();
+        }else{
+        Intent intent = new Intent(this,SearchResultActivity.class);
         intent.putExtra("station_lon",station_lon);
         intent.putExtra("station_lat",station_lat);
-        intent.putExtra("page_param",3);
-        startActivity(intent);*/
-        //Toast.makeText(this, "駅が選択されていません", Toast.LENGTH_SHORT).show();
+        //intent.putExtra("page_param",3);
+        startActivity(intent);
+        }
     }
 
     private void setPrefData(){

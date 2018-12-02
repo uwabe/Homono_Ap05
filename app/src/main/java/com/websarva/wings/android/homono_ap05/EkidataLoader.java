@@ -64,21 +64,11 @@ public class EkidataLoader extends AsyncTask<String, String, String> {
                 Log.d("Data",jsonData);
             } else if (spinner_name == "路線") {
                 Log.d("Data",jsonData);
-                //"line_cd":11313,"line_name":"JR中央・総武線","line_lon":139.8371552268119,"line_lat":35.701641362335245,"line_zoom":10,っていうのを消さないとダメ?
                 jsonData = jsonData.replace("if(typeof(xml)=='undefined') xml = {};xml.data = ", "");
                 jsonData = jsonData.replace("if(typeof(xml.onload)=='function') xml.onload(xml.data);", "");
                 jsonData = jsonData.replace("\"station_l\"", "station_l");
                 jsonData = jsonData.replace("\"station_cd\"", "station_cd");
-                jsonData = jsonData.replace("\"station_g_cd\"", "station_g_cd");
                 jsonData = jsonData.replace("\"station_name\"", "station_name");
-                jsonData = jsonData.replace("\"lon\"", "lon");
-                jsonData = jsonData.replace("\"lat\"", "lat");
-                jsonData = jsonData.replace("station_cd:", "station_cd:\"");
-                jsonData = jsonData.replace(",station_g_cd:", "\",station_g_cd:\"");
-                jsonData = jsonData.replace(",station_name:", "\",station_name:");
-                jsonData = jsonData.replace(",lon:", ",lon:\"");
-                jsonData = jsonData.replace(",lat:", "\",lat:\"");
-                jsonData = jsonData.replace("},{station_cd:","\"},{station_cd:");
                 Log.d("Data",jsonData);
             }
 
