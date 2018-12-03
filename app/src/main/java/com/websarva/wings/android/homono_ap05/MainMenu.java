@@ -150,12 +150,12 @@ public class MainMenu extends AppCompatActivity {
             Intent intent = new Intent(MainMenu.this, SearchResultActivity.class);
             String lon = String.valueOf(longitude);
             String lat = String.valueOf(latitude);
-            intent.putExtra("station_lon",lon);
-            intent.putExtra("station_lat",lat);
+            intent.putExtra("result_lon",lon);
+            intent.putExtra("result_lat",lat);
             //String urlStr = "geo:" + latitude + "," + longitude;
             //画面パラメータと一緒に渡す？
             Log.i("ButtonClick","現在地押したー");
-            Log.i("ButtonClick1","現在地:"+ longitude+ "&" + latitude);
+            Log.i("ButtonClick1","現在地:"+ lon+ "&" + lat);
             startActivity(intent);
         }
     }
