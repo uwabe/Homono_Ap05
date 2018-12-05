@@ -28,8 +28,8 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
     private ArrayList<Lines> linesArrayList = new ArrayList<>();
     private ArrayList<Stations> stationsArrayList = new ArrayList<>();
 
-    String station_lon = "";
-    String station_lat = "";
+    private String station_lon = "";
+    private String station_lat = "";
 
 
     @Override
@@ -132,9 +132,9 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     Stations stations = (Stations) adapterView.getSelectedItem();
-                    String station_lon = stations.getLon();
-                    String station_lat = stations.getLat();
-                    Log.e("result","lon:"+ station_lon+" lat:"+ station_lat);
+                    station_lon = stations.getLon();
+                    station_lat = stations.getLat();
+                    Log.i("result1","lon:"+ station_lon+" lat:"+ station_lat);
                 }
 
                 @Override
@@ -153,9 +153,14 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "駅が選択されていません", Toast.LENGTH_SHORT).show();
         }else{
         Intent intent = new Intent(this,SearchResultActivity.class);
-        intent.putExtra("result_lon",station_lon);
-        intent.putExtra("result_lat",station_lat);
-        //intent.putExtra("page_param",3);
+        Log.i("StaButtonClick","現在地:"+ station_lon+ "&" + station_lat);
+        String lon = String.valueOf(station_lon);
+        String lat = String.valueOf(station_lat);
+        intent.putExtra("result_lon",lon);
+        intent.putExtra("result_lat",lat);
+        Log.i("StaButtonClick1","駅押したー");
+        Log.i("StaButtonClick2","現在地:"+ lon+ "&" + lat);
+        intent.putExtra("page_param",3);
         startActivity(intent);
         }
     }
