@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "HMG001.db";
-    private  static  final int DATABASE_VERSION = 1;
+    private  static  final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,9 +28,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(create_sql);
     }
 
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        //ここに削除処理?あとで確認
+
         String sql2 = "DROP TABLE IF EXISTS HMG001;";
         db.execSQL(sql2);
 

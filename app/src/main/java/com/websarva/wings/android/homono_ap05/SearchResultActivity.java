@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
-
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -23,13 +22,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,6 +40,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
     private GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
     CameraUpdate cameraUpdate;
+    final GoogleDataLoader googleDataLoader = new GoogleDataLoader(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +62,6 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         mGoogleApiClient.connect();
 
 
-        // ズームにする
-        //zoomMap(lat_d, lon_d);
-
-        // 円を描く
-//        googleMap.addCircle(new CircleOptions()
-//                .center(pos)
-//                .radius(500)
-//                .strokeColor(Color.RED)
-//                .fillColor(Color.RED));
-
-        //GoogleMapの情報を手に入れる非同期タスクの生成
-        //final GoogleDataLoader googleDataLoader = new GoogleDataLoader(this);
-        //実行
-        //googleDataLoader.execute(lat + "," + lon);
         // 現在のintentを取得する
         Intent intent = getIntent();
         // intentから指定キーの文字列を取得する
@@ -96,112 +80,127 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         //マーカーに関する記述は後で
         //googleMap.addMarker(new MarkerOptions().position(pos).title("first_pin"));
         //中心地は各画面から渡された経度と緯度
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-        cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat_d, lon_d), 15);
-        googleMap.moveCamera(cameraUpdate);
-
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        //cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat_d, lon_d), 16);
+        //googleMap.moveCamera(cameraUpdate);
+        String urlDraft = "";
         //分岐
         switch (pageParam) {
             //現在地の場合
             case 1:
                 Log.i("Bunki", "現在地から来た");
+                // ズームにする
+                zoomMap(googleMap,lat_d, lon_d);
+                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                //実行
+                googleDataLoader.execute(urlDraft);
                 // 円を描く
                 googleMap.addCircle(new CircleOptions()
                         .center(pos)
                         .radius(500)
-                        .strokeColor(Color.BLUE)
-                        .fillColor(Color.LTGRAY));
+                        .strokeColor(Color.RED)
+                        .fillColor(Color.argb(150,204,204,204)));
                 break;
             //お気に入りの場合
             case 2:
                 Log.i("Bunki", "お気に入りから来た");
+                // ズームにする
+                zoomMap(googleMap,lat_d, lon_d);
+                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                //実行
+                googleDataLoader.execute(urlDraft);
+
                 break;
             //駅名の場合
             case 3:
                 Log.i("Bunki", "駅から来た");
+                // ズームにする
+                zoomMap(googleMap,lat_d, lon_d);
+                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                //実行
+                googleDataLoader.execute(urlDraft);
+
                 // 円を描く
                 googleMap.addCircle(new CircleOptions()
                         .center(pos)
                         .radius(500)
-                        .strokeColor(Color.BLUE)
-                        //ここ薄いグレーにできるの・・・?
-                        .fillColor(Color.LTGRAY));
+                        .strokeColor(Color.RED)
+                        .fillColor(Color.argb(150,204,204,204)));
                 break;
         }
     }
 
-//    //地図をzoomして表示する
-//    private void zoomMap(GoogleMap gMap,double latitude, double longitude) {
-//        // 表示する東西南北の緯度経度を設定
-//        double south = latitude * (1 - 0.00005);
-//        double west = longitude * (1 - 0.00005);
-//        double north = latitude * (1 + 0.00005);
-//        double east = longitude * (1 + 0.00005);
-//
-//        Log.i("result3","南:"+ south +"西:"+west+"北:"+north+"東:"+east);
-//        LatLngBounds bounds = LatLngBounds.builder()
-//                .include(new LatLng(south, west))
-//                .include(new LatLng(north, east))
-//                .build();
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels;
-//        Log.i("result3","幅:"+ width +"高さ:"+height);
-//        //Log.i("result3", String.valueOf(googleMap));
-//        // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
-//        gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
-//    }
+    //地図をzoomして表示する
+    private void zoomMap(GoogleMap gMap,double latitude, double longitude) {
+        // 表示する東西南北の緯度経度を設定
+        double south = latitude * (1 - 0.00005);
+        double west = longitude * (1 - 0.00005);
+        double north = latitude * (1 + 0.00005);
+        double east = longitude * (1 + 0.00005);
+
+        Log.i("result3","南:"+ south +"西:"+west+"北:"+north+"東:"+east);
+        LatLngBounds bounds = LatLngBounds.builder()
+                .include(new LatLng(south, west))
+                .include(new LatLng(north, east))
+                .build();
+       int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        Log.i("result3","幅:"+ width +"高さ:"+height);
+        // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
+        gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
+    }
 
     //onPostExecuteで実行される関数
     public void result_job(String result) {
-        //setPinHonmono(result);
+        setPinHonmono(result);
     }
 
 
-//    public void setPinHonmono(String jsonData) {
-//        try {
-//            JSONObject jsonObject = new JSONObject(jsonData);
-//            JSONArray shopList = jsonObject.getJSONArray("results");
-//
-//            for (int i = 0; i < shopList.length(); i++) {
-//
-//                JSONObject jsonObject_shop = shopList.getJSONObject(i);
-//                JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
-//
-//                final String shopName = jsonObject_shop.getString("name");
-//                final String lat = location.getString("lat");
-//                final String lon = location.getString("lng");
-//
-//                MarkerOptions opt = new MarkerOptions();
-//                //位置情報
-//                opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-//                //店名
-//                opt.title(shopName);
-//                //住所
-//                opt.snippet(jsonObject_shop.getString("vicinity"));
-//                Marker marker = googleMap.addMarker(opt);
-//                //表示する
-//                marker.showInfoWindow();
-//                // タップ時のイベントハンドラ登録
-//                //この辺はまだまだ
-//                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                    @Override
-//                    public boolean onMarkerClick(Marker marker) {
-//                        //SQLLiteでお気に入りに登録する
-//                        //DatabaseHelper dBHelper = null;
-//                        try {
-//
-//                        } catch (Exception e) {
-//                            Log.d("DB作成時のエラー", e.getMessage());
-//                        }
-//                        Toast.makeText(getApplicationContext(), "お気に入りに登録しました", Toast.LENGTH_LONG).show();
-//                        return false;
-//                    }
-//                });
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
+    public void setPinHonmono(String jsonData) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray shopList = jsonObject.getJSONArray("results");
+
+            for (int i = 0; i < shopList.length(); i++) {
+
+                JSONObject jsonObject_shop = shopList.getJSONObject(i);
+                JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
+                JSONObject openingHours = jsonObject.getJSONObject("opening_hours");
+
+                final String shopName = jsonObject_shop.getString("name");//店舗名
+                final String vicinity = jsonObject.getString("vicinity");//住所
+                final String placeId = jsonObject.getString("place_id");//店舗ID
+                final String openNow = openingHours.getString("open_now");
+                final String lat = location.getString("lat");
+                final String lon = location.getString("lng");
+
+                MarkerOptions opt = new MarkerOptions();
+                //位置情報
+                opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
+                Marker marker = googleMap.addMarker(opt);
+                //表示する
+                marker.showInfoWindow();
+                // タップ時のイベントハンドラ登録
+                //この辺はまだまだ
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                        intent.putExtra("shopName", shopName);
+                        intent.putExtra("vicinity", vicinity);
+                        intent.putExtra("placeId", placeId);
+                        intent.putExtra("openingHours", openNow);
+                        intent.putExtra("lat", lat);
+                        intent.putExtra("lon", lon);
+                        startActivity(intent);
+                        return false;
+                    }
+                });
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     //フッターボタン押下
     public void onMenuButtonClick(View view) {

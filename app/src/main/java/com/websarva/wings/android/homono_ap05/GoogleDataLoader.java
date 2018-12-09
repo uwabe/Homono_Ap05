@@ -26,7 +26,7 @@ public class GoogleDataLoader extends AsyncTask<String,String,String> {
             HttpURLConnection httpURLConnection = null;
             URL url = null;
 
-            String urlStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + strings[0] + "&radius=500&key=[key]&keyword=日高屋";
+            String urlStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + strings[0] + "&key=*";
             Log.d("★緯度経度", strings[0]);
             Log.d("★JSONのURL", urlStr);
             url = new URL(urlStr);
@@ -38,7 +38,7 @@ public class GoogleDataLoader extends AsyncTask<String,String,String> {
             httpURLConnection.connect();
             InputStream inputStream = httpURLConnection.getInputStream();
             readStr = is2String(inputStream);
-
+            Log.i("result4",readStr);
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }catch (Exception ex) {
