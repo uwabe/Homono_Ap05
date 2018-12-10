@@ -36,7 +36,7 @@ import static java.lang.Double.parseDouble;
 public class SearchResultActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
 
-    GoogleMap googleMap;
+    private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
     CameraUpdate cameraUpdate;
@@ -51,8 +51,8 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap = googleMap;
+    public void onMapReady(GoogleMap gMap) {
+        googleMap = gMap;
         //Googleが提供しているサービスに対して接続するためのクライアント
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -91,7 +91,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "現在地から来た");
                 // ズームにする
                 zoomMap(googleMap,lat_d, lon_d);
-                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
                 // 円を描く
@@ -106,7 +106,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "お気に入りから来た");
                 // ズームにする
                 zoomMap(googleMap,lat_d, lon_d);
-                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
 
@@ -116,7 +116,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "駅から来た");
                 // ズームにする
                 zoomMap(googleMap,lat_d, lon_d);
-                urlDraft = "location=" + lat + "," + lon + "&radius=500&language=ja&keyword=日高屋";
+                urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
 
@@ -165,23 +165,25 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
                 JSONObject jsonObject_shop = shopList.getJSONObject(i);
                 JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
-                JSONObject openingHours = jsonObject.getJSONObject("opening_hours");
+                JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
 
                 final String shopName = jsonObject_shop.getString("name");//店舗名
-                final String vicinity = jsonObject.getString("vicinity");//住所
-                final String placeId = jsonObject.getString("place_id");//店舗ID
+                final String vicinity = jsonObject_shop.getString("vicinity");//住所
+                final String placeId = jsonObject_shop.getString("place_id");//店舗ID
                 final String openNow = openingHours.getString("open_now");
                 final String lat = location.getString("lat");
                 final String lon = location.getString("lng");
-
+                Log.i("☆店名住所", shopName+","+vicinity);
+                Log.i("☆IDopnow", placeId+","+openNow);
+                Log.i("☆緯度経度", lat+","+lon);
                 MarkerOptions opt = new MarkerOptions();
+
                 //位置情報
                 opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
                 Marker marker = googleMap.addMarker(opt);
                 //表示する
                 marker.showInfoWindow();
                 // タップ時のイベントハンドラ登録
-                //この辺はまだまだ
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
