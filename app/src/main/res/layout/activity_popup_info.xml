@@ -33,6 +33,15 @@
             android:textSize="20dp" />
 
         <TextView
+            android:id="@+id/txtPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="20dp" />
+
+        <TextView
             android:id="@+id/txtOpeningNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,15 +50,29 @@
             android:layout_marginBottom="5dp"
             android:textSize="20dp" />
 
-        <Button
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <Button
             android:id="@+id/button_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:backgroundTint="#FF8b0000"
             android:text="@string/insert"
             android:textColor="#FFffffff" />
+
+            <Button
+                android:id="@+id/button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#FF8b0000"
+                android:text="@string/back"
+                android:textColor="#FFffffff" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

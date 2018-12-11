@@ -11,23 +11,27 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class GoogleDataLoader extends AsyncTask<String,String,String> {
-    private SearchResultActivity _sra;
+public class ShopInfoLoader extends AsyncTask<String,String,String> {
 
-    public GoogleDataLoader(SearchResultActivity sra){
+    private PopupInfo _pi;
+    private String place_id;
+
+    //コンストラクタ
+    public ShopInfoLoader(PopupInfo pi){
         super();
-        _sra = sra;
+        _pi=pi;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected String doInBackground(String... strings){
+        place_id = strings[0];
+        Log.d("★place_id", strings[0]);
         String readStr = "";
         try{
             HttpURLConnection httpURLConnection = null;
             URL url = null;
 
-            String urlStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + strings[0] + "&radius=500&key=*&keyword=日高屋";
-            Log.d("★緯度経度", strings[0]);
+            String urlStr = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&=name,rating,formatted_phone_number&key=*";
             Log.d("★JSONのURL", urlStr);
             url = new URL(urlStr);
             httpURLConnection = (HttpURLConnection)url.openConnection();
@@ -38,7 +42,7 @@ public class GoogleDataLoader extends AsyncTask<String,String,String> {
             httpURLConnection.connect();
             InputStream inputStream = httpURLConnection.getInputStream();
             readStr = is2String(inputStream);
-            Log.i("result4",readStr);
+            Log.i("★取得結果",readStr);
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }catch (Exception ex) {
@@ -49,8 +53,8 @@ public class GoogleDataLoader extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Log.d("取得したデータ", result);
-        _sra.result_job(result);
+        Log.d("★取得したデータ", result);
+        _pi.result_job(result);
     }
 
     private String is2String(InputStream inputStream) throws IOException {
@@ -68,3 +72,4 @@ public class GoogleDataLoader extends AsyncTask<String,String,String> {
         return stringBuffer.toString();
     }
 }
+

@@ -10,6 +10,7 @@
     <string name="SearchStartButton">検索する</string>
     <string name="text2">お気に入りないよ</string>
     <string name="bt_menu">メニューへ戻る</string>
-    <string name="insert">お気に登録</string>
+    <string name="insert">お気に入り登録</string>
+    <string name="back">閉じる</string>
 
 </resources>

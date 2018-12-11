@@ -90,7 +90,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
             case 1:
                 Log.i("Bunki", "現在地から来た");
                 // ズームにする
-                zoomMap(googleMap,lat_d, lon_d);
+                zoomMap(googleMap, lat_d, lon_d);
                 urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
@@ -99,13 +99,13 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                         .center(pos)
                         .radius(500)
                         .strokeColor(Color.RED)
-                        .fillColor(Color.argb(150,204,204,204)));
+                        .fillColor(Color.argb(150, 204, 204, 204)));
                 break;
             //お気に入りの場合
             case 2:
                 Log.i("Bunki", "お気に入りから来た");
                 // ズームにする
-                zoomMap(googleMap,lat_d, lon_d);
+                zoomMap(googleMap, lat_d, lon_d);
                 urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
@@ -115,7 +115,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
             case 3:
                 Log.i("Bunki", "駅から来た");
                 // ズームにする
-                zoomMap(googleMap,lat_d, lon_d);
+                zoomMap(googleMap, lat_d, lon_d);
                 urlDraft = lat + "," + lon;
                 //実行
                 googleDataLoader.execute(urlDraft);
@@ -125,27 +125,27 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                         .center(pos)
                         .radius(500)
                         .strokeColor(Color.RED)
-                        .fillColor(Color.argb(150,204,204,204)));
+                        .fillColor(Color.argb(150, 204, 204, 204)));
                 break;
         }
     }
 
     //地図をzoomして表示する
-    private void zoomMap(GoogleMap gMap,double latitude, double longitude) {
+    private void zoomMap(GoogleMap gMap, double latitude, double longitude) {
         // 表示する東西南北の緯度経度を設定
         double south = latitude * (1 - 0.00005);
         double west = longitude * (1 - 0.00005);
         double north = latitude * (1 + 0.00005);
         double east = longitude * (1 + 0.00005);
 
-        Log.i("result3","南:"+ south +"西:"+west+"北:"+north+"東:"+east);
+        Log.i("result3", "南:" + south + "西:" + west + "北:" + north + "東:" + east);
         LatLngBounds bounds = LatLngBounds.builder()
                 .include(new LatLng(south, west))
                 .include(new LatLng(north, east))
                 .build();
-       int width = getResources().getDisplayMetrics().widthPixels;
+        int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        Log.i("result3","幅:"+ width +"高さ:"+height);
+        Log.i("result3", "幅:" + width + "高さ:" + height);
         // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
         gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
     }
@@ -158,46 +158,54 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
     public void setPinHonmono(String jsonData) {
         try {
-            JSONObject jsonObject = new JSONObject(jsonData);
-            JSONArray shopList = jsonObject.getJSONArray("results");
+            boolean iszero = jsonData.contains("ZERO_RESULTS");
+            Log.i("☆ステータス", "結果:"+iszero);
+            if(jsonData.contains("ZERO_RESULTS")) {
+                Toast.makeText(SearchResultActivity.this, "店舗がありません", Toast.LENGTH_LONG).show();
 
-            for (int i = 0; i < shopList.length(); i++) {
+            } else {
+                Log.i("☆ステータス", "結果"+jsonData);
+                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONArray shopList = jsonObject.getJSONArray("results");
+                for (int i = 0; i < shopList.length(); i++) {
 
-                JSONObject jsonObject_shop = shopList.getJSONObject(i);
-                JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
-                JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
+                    JSONObject jsonObject_shop = shopList.getJSONObject(i);
+                    JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
+                    //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
 
-                final String shopName = jsonObject_shop.getString("name");//店舗名
-                final String vicinity = jsonObject_shop.getString("vicinity");//住所
-                final String placeId = jsonObject_shop.getString("place_id");//店舗ID
-                final String openNow = openingHours.getString("open_now");
-                final String lat = location.getString("lat");
-                final String lon = location.getString("lng");
-                Log.i("☆店名住所", shopName+","+vicinity);
-                Log.i("☆IDopnow", placeId+","+openNow);
-                Log.i("☆緯度経度", lat+","+lon);
-                MarkerOptions opt = new MarkerOptions();
+                    //final String shopName = jsonObject_shop.getString("name");//店舗名
+                    //final String vicinity = jsonObject_shop.getString("vicinity");//住所
+                    final String placeId = jsonObject_shop.getString("place_id");//店舗ID
+                    //final String openNow = openingHours.getString("open_now");
+                    final String lat = location.getString("lat");
+                    final String lon = location.getString("lng");
+                    //Log.i("☆店名住所", shopName + "," + vicinity);
+                    Log.i("☆ID", placeId);
+                    Log.i("☆緯度経度", lat + "," + lon);
 
-                //位置情報
-                opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-                Marker marker = googleMap.addMarker(opt);
-                //表示する
-                marker.showInfoWindow();
-                // タップ時のイベントハンドラ登録
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                        intent.putExtra("shopName", shopName);
-                        intent.putExtra("vicinity", vicinity);
-                        intent.putExtra("placeId", placeId);
-                        intent.putExtra("openingHours", openNow);
-                        intent.putExtra("lat", lat);
-                        intent.putExtra("lon", lon);
-                        startActivity(intent);
-                        return false;
-                    }
-                });
+
+                    MarkerOptions opt = new MarkerOptions();
+                    //位置情報
+                    opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
+                    Marker marker = googleMap.addMarker(opt);
+                    //表示する
+                    marker.showInfoWindow();
+                    // タップ時のイベントハンドラ登録
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                            //intent.putExtra("shopName", shopName);
+                            //intent.putExtra("vicinity", vicinity);
+                            intent.putExtra("placeId", placeId);
+                            //intent.putExtra("openingHours", openNow);
+                            intent.putExtra("lat", lat);
+                            intent.putExtra("lon", lon);
+                            startActivity(intent);
+                            return false;
+                        }//marker click
+                    });//listener
+                }//for文
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -212,11 +220,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
     @Override
     public void onLocationChanged(Location location) {
-//        if(location == null){
-//            Toast.makeText(getApplicationContext(),"Location not found",Toast.LENGTH_SHORT).show();
-//        }else{
-//            LatLng latLngCurrent = new LatLng(location.getLatitude(),location.getLongitude());
-//        }
+
 
     }
 
@@ -237,13 +241,6 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //この辺非推奨なんですけど
-        //locationRequest = new LocationRequest().create();
-        //locationRequest.setInterval(1000);
-        //locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        //LocationServices.FusedLocationApi.requestLocationUpdates(
-        //        mGoogleApiClient, locationRequest, this);
     }
 
     @Override
