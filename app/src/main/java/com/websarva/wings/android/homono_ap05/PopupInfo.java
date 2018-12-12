@@ -15,8 +15,8 @@ import org.json.JSONObject;
 
 public class PopupInfo extends AppCompatActivity {
 
-    private SQLiteDatabase db;
-    private DatabaseHelper databaseHelper;
+    //private SQLiteDatabase db;
+    //private DatabaseHelper databaseHelper;
     private String strShopName;
     private String strVicinity;
     private String strPlaceId;
@@ -112,26 +112,16 @@ public class PopupInfo extends AppCompatActivity {
         @Override
         public void onClick(View view){
 
-            if (databaseHelper == null){
-                databaseHelper = new DatabaseHelper(getApplicationContext());
-            }
+            DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-            if (db == null){
-                db = databaseHelper.getWritableDatabase();
-            }
 
             String storeName = strShopName;
             String placeId = strPlaceId;
             String lat = strLat;
             String lng = strLon;
-
+            Log.i("☆値の確認", "確認"+storeName+","+placeId+","+lat+","+lng);
             insertData(db,storeName,placeId,lat,lng);
-
-//            String key = editTextKey.getText().toString();
-//            String value = editTextValue.getText().toString();
-//
-//            insertData(db,key,value);
-
             finish();
 
         }
@@ -151,10 +141,11 @@ public class PopupInfo extends AppCompatActivity {
         values.put("place_id",placeId);
         values.put("lat", lat);
         values.put("lng", lng);
-//        values.put("address", address);
-
-        db.insert("storeTable",null,values);
-//        db.insert("sampleTable",null,values);
+        try{
+            db.insert("StoreTable",null,values);
+        }finally {
+            db.close();
+        }
 
     }
 }
