@@ -31,7 +31,7 @@ public class ShopInfoLoader extends AsyncTask<String,String,String> {
             HttpURLConnection httpURLConnection = null;
             URL url = null;
 
-            String urlStr = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&=name,rating,formatted_phone_number&key=*";
+            String urlStr = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&=name,rating,formatted_phone_number&language=ja&key=*";
             Log.d("★JSONのURL", urlStr);
             url = new URL(urlStr);
             httpURLConnection = (HttpURLConnection)url.openConnection();
@@ -51,25 +51,25 @@ public class ShopInfoLoader extends AsyncTask<String,String,String> {
         return readStr;
     }
 
-    @Override
-    protected void onPostExecute(String result) {
+@Override
+protected void onPostExecute(String result) {
         Log.d("★取得したデータ", result);
         _pi.result_job(result);
-    }
+        }
 
-    private String is2String(InputStream inputStream) throws IOException {
+private String is2String(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         StringBuffer stringBuffer = new StringBuffer();
         String st1 = "";
         while ((st1 = reader.readLine()) != null) {
-            stringBuffer.append(st1);
+        stringBuffer.append(st1);
         }
         try {
-            inputStream.close();
+        inputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+        e.printStackTrace();
         }
         return stringBuffer.toString();
-    }
-}
+        }
+        }
 

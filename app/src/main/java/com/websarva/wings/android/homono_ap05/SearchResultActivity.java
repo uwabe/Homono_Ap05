@@ -159,12 +159,12 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
     public void setPinHonmono(String jsonData) {
         try {
             boolean iszero = jsonData.contains("ZERO_RESULTS");
-            Log.i("☆ステータス", "結果:"+iszero);
-            if(jsonData.contains("ZERO_RESULTS")) {
+            Log.i("☆ステータス", "結果:" + iszero);
+            if (jsonData.contains("ZERO_RESULTS")) {
                 Toast.makeText(SearchResultActivity.this, "店舗がありません", Toast.LENGTH_LONG).show();
 
             } else {
-                Log.i("☆ステータス", "結果"+jsonData);
+                Log.i("☆ステータス", "結果" + jsonData);
                 JSONObject jsonObject = new JSONObject(jsonData);
                 JSONArray shopList = jsonObject.getJSONArray("results");
                 for (int i = 0; i < shopList.length(); i++) {
@@ -173,38 +173,61 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                     JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
                     //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
 
-                    //final String shopName = jsonObject_shop.getString("name");//店舗名
-                    //final String vicinity = jsonObject_shop.getString("vicinity");//住所
                     final String placeId = jsonObject_shop.getString("place_id");//店舗ID
-                    //final String openNow = openingHours.getString("open_now");
                     final String lat = location.getString("lat");
                     final String lon = location.getString("lng");
                     //Log.i("☆店名住所", shopName + "," + vicinity);
                     Log.i("☆ID", placeId);
                     Log.i("☆緯度経度", lat + "," + lon);
 
-
                     MarkerOptions opt = new MarkerOptions();
                     //位置情報
                     opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-                    Marker marker = googleMap.addMarker(opt);
-                    //表示する
-                    marker.showInfoWindow();
-                    // タップ時のイベントハンドラ登録
-                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-                            Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                            //intent.putExtra("shopName", shopName);
-                            //intent.putExtra("vicinity", vicinity);
-                            intent.putExtra("placeId", placeId);
-                            //intent.putExtra("openingHours", openNow);
-                            intent.putExtra("lat", lat);
-                            intent.putExtra("lon", lon);
-                            startActivity(intent);
-                            return false;
-                        }//marker click
-                    });//listener
+
+                        Marker marker = googleMap.addMarker(opt);
+                        //表示する
+                        //marker.showInfoWindow();
+                        // タップ時のイベントハンドラ登録
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                String makerid = marker.getId();
+                                Log.i("☆マーカー", "試し" + makerid);
+                                if (makerid.equals("m0")) {
+                                    Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                                    intent.putExtra("placeId", placeId);
+                                    intent.putExtra("lat", lat);
+                                    intent.putExtra("lon", lon);
+                                    startActivity(intent);
+                                } else if (makerid.equals("m1")) {
+                                    Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                                    intent.putExtra("placeId", placeId);
+                                    intent.putExtra("lat", lat);
+                                    intent.putExtra("lon", lon);
+                                    startActivity(intent);
+                                }else if (makerid.equals("m2")) {
+                                    Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                                    intent.putExtra("placeId", placeId);
+                                    intent.putExtra("lat", lat);
+                                    intent.putExtra("lon", lon);
+                                    startActivity(intent);
+                                }else if (makerid.equals("m3")){
+                                    Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                                    intent.putExtra("placeId", placeId);
+                                    intent.putExtra("lat", lat);
+                                    intent.putExtra("lon", lon);
+                                    startActivity(intent);
+                                }else if (makerid.equals("m4")){
+                                    Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                                    intent.putExtra("placeId", placeId);
+                                    intent.putExtra("lat", lat);
+                                    intent.putExtra("lon", lon);
+                                    startActivity(intent);
+                                }
+                                return false;
+                            }//marker click
+                        });//listener
+
                 }//for文
             }
         } catch (Exception ex) {

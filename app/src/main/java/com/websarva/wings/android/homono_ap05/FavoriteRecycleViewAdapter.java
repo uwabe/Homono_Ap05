@@ -1,5 +1,6 @@
 package com.websarva.wings.android.homono_ap05;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ public class FavoriteRecycleViewAdapter extends RecyclerView.Adapter<FavoriteVie
         FavoriteViewHolder viewHolder = new FavoriteViewHolder(inflate);
         return viewHolder;
     }
+
 
     @Override
     public void onBindViewHolder(FavoriteViewHolder holder, int position) {
