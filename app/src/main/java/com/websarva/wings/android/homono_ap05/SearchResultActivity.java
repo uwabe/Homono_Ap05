@@ -168,22 +168,26 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 JSONObject jsonObject = new JSONObject(jsonData);
                 JSONArray shopList = jsonObject.getJSONArray("results");
                 for (int i = 0; i < shopList.length(); i++) {
-
-                    JSONObject jsonObject_shop = shopList.getJSONObject(i);
-                    JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
-                    //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
-
-                    final String placeId = jsonObject_shop.getString("place_id");//店舗ID
-                    final String lat = location.getString("lat");
-                    final String lon = location.getString("lng");
-                    //Log.i("☆店名住所", shopName + "," + vicinity);
-                    Log.i("☆ID", placeId);
-                    Log.i("☆緯度経度", lat + "," + lon);
-
-                    MarkerOptions opt = new MarkerOptions();
-                    //位置情報
-                    opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-
+                    if(i<5) {
+                        JSONObject jsonObject_shop = shopList.getJSONObject(i);
+                        JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
+                        //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
+                        String placeId = jsonObject_shop.getString("place_id");//店舗ID
+                        String lat = location.getString("lat");
+                        String lon = location.getString("lng");
+                        Log.i("☆ID", placeId);
+                        Log.i("☆緯度経度", lat + "," + lon);
+                        final String[] placeidlist = new String[4];
+                        final String[] latlist = new String[4];
+                        final String[] lonlist = new String[4];
+                        placeidlist[i] = placeId;
+                        latlist[i] = lat;
+                        lonlist[i] = lon;
+                        MarkerOptions opt = new MarkerOptions();
+                        //位置情報
+                        opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
+                        Log.i("☆配列確認1", "何回め:"+i);
+                        Log.i("☆配列確認2", placeidlist[0]+","+latlist[0]+","+lonlist[0]);
                         Marker marker = googleMap.addMarker(opt);
                         //表示する
                         //marker.showInfoWindow();
@@ -195,39 +199,39 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                                 Log.i("☆マーカー", "試し" + makerid);
                                 if (makerid.equals("m0")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                                    intent.putExtra("placeId", placeId);
-                                    intent.putExtra("lat", lat);
-                                    intent.putExtra("lon", lon);
+                                    intent.putExtra("placeId", placeidlist[0]);
+                                    intent.putExtra("lat", latlist[0]);
+                                    intent.putExtra("lon", lonlist[0]);
                                     startActivity(intent);
                                 } else if (makerid.equals("m1")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                                    intent.putExtra("placeId", placeId);
-                                    intent.putExtra("lat", lat);
-                                    intent.putExtra("lon", lon);
+                                    intent.putExtra("placeId", placeidlist[1]);
+                                    intent.putExtra("lat", latlist[1]);
+                                    intent.putExtra("lon", lonlist[1]);
                                     startActivity(intent);
-                                }else if (makerid.equals("m2")) {
+                                } else if (makerid.equals("m2")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                                    intent.putExtra("placeId", placeId);
-                                    intent.putExtra("lat", lat);
-                                    intent.putExtra("lon", lon);
+                                    intent.putExtra("placeId", placeidlist[2]);
+                                    intent.putExtra("lat", latlist[2]);
+                                    intent.putExtra("lon", lonlist[2]);
                                     startActivity(intent);
-                                }else if (makerid.equals("m3")){
+                                } else if (makerid.equals("m3")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                                    intent.putExtra("placeId", placeId);
-                                    intent.putExtra("lat", lat);
-                                    intent.putExtra("lon", lon);
+                                    intent.putExtra("placeId", placeidlist[3]);
+                                    intent.putExtra("lat", latlist[3]);
+                                    intent.putExtra("lon", lonlist[3]);
                                     startActivity(intent);
-                                }else if (makerid.equals("m4")){
+                                } else if (makerid.equals("m4")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
-                                    intent.putExtra("placeId", placeId);
-                                    intent.putExtra("lat", lat);
-                                    intent.putExtra("lon", lon);
+                                    intent.putExtra("placeId", placeidlist[4]);
+                                    intent.putExtra("lat", latlist[4]);
+                                    intent.putExtra("lon", lonlist[4]);
                                     startActivity(intent);
                                 }
                                 return false;
                             }//marker click
                         });//listener
-
+                    }
                 }//for文
             }
         } catch (Exception ex) {

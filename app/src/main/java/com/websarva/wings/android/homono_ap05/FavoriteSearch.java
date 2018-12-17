@@ -68,7 +68,9 @@ public class FavoriteSearch extends AppCompatActivity {
             databaseHelper = new DatabaseHelper(getApplicationContext());
             db = databaseHelper.getWritableDatabase();
             //db.execSQL("delete from FOOD_TABLE where price = (select MIN(price) from FOOD_TABLE)");
-            String sqlStr = "delete from StoreTable where store_name = "+ 1;
+            String listname= dataset.get(direction).getFavoriteTitle();
+            Log.i("☆確認", "onSwiped: "+listname);
+            String sqlStr = "delete from StoreTable where store_name = '"+ listname+"'";
             db.execSQL(sqlStr,null);
 
             final FavoriteRecycleViewAdapter adapter =new FavoriteRecycleViewAdapter(FavoriteSearch.this,createDataset());

@@ -127,17 +127,18 @@ public class PopupInfo extends AppCompatActivity {
             String placeId = strPlaceId;
             String lat = strLat;
             String lng = strLon;
-            String sqlselect = "select store_name, place_id, lat, lng from StoreTable where placeId ="+placeId;
+            String sqlselect = "select store_name, place_id, lat, lng from StoreTable where place_id ='"+placeId+"'";
             Log.i("☆値の確認", "確認"+storeName+","+placeId+","+lat+","+lng);
             Cursor c = db.rawQuery(sqlselect,null);
+            Log.i("☆確認カーソル", "取れたか:"+c);
             boolean next = c.moveToFirst();
-            //if (next){
-            //    Toast.makeText(PopupInfo.this,"登録済みです", Toast.LENGTH_LONG).show();
-            //    finish();
-            //}else {
+            if (next){
+                Toast.makeText(PopupInfo.this,"登録済みです", Toast.LENGTH_LONG).show();
+                finish();
+            }else {
                 insertData(db, storeName, placeId, lat, lng);
                 finish();
-            //}
+            }
 
         }
     }
