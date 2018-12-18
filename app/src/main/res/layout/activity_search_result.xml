@@ -10,16 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#FF8b0000"
-        android:background="@android:drawable/bottom_bar">
-
+        android:background="@android:drawable/bottom_bar"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btMenu2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dip"
+            android:text="@string/bt_menu"
+            android:onClick="onMenuButtonClick"
+            android:textColor="#FFffffff" />
         <TextView
-            android:id="@+id/btMenu"
+            android:id="@+id/btMenu1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="4dip"
             android:textSize="20dp"
             android:textColor="#FFffffff"
-            android:text="検索結果" />
+            android:text="検索結果表示" />
     </LinearLayout>
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,5 +36,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchResultActivity" />
-    <include layout="@layout/activity_footer" android:id="@+id/bottom"/>
 </LinearLayout>
