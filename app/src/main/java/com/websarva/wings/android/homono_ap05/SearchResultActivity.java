@@ -157,6 +157,12 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
 
     public void setPinHonmono(String jsonData) {
+        String placeId;
+        String lat;
+        String lon;
+        final String[] placeidlist = new String[4];
+        final String[] latlist = new String[4];
+        final String[] lonlist = new String[4];
         try {
             boolean iszero = jsonData.contains("ZERO_RESULTS");
             Log.i("☆ステータス", "結果:" + iszero);
@@ -172,14 +178,11 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                         JSONObject jsonObject_shop = shopList.getJSONObject(i);
                         JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
                         //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
-                        String placeId = jsonObject_shop.getString("place_id");//店舗ID
-                        String lat = location.getString("lat");
-                        String lon = location.getString("lng");
+                        placeId = jsonObject_shop.getString("place_id");//店舗ID
+                        lat= location.getString("lat");
+                        lon= location.getString("lng");
                         Log.i("☆ID", placeId);
                         Log.i("☆緯度経度", lat + "," + lon);
-                        final String[] placeidlist = new String[4];
-                        final String[] latlist = new String[4];
-                        final String[] lonlist = new String[4];
                         placeidlist[i] = placeId;
                         latlist[i] = lat;
                         lonlist[i] = lon;
