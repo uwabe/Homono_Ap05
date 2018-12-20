@@ -45,44 +45,43 @@ public class FavoriteSearch extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(FavoriteSearch.this, "サンプル",Toast.LENGTH_LONG).show();
+                //Toast.makeText(FavoriteSearch.this, "サンプル:",Toast.LENGTH_LONG).show();
             }
         });
-        swipeToDismissTouchHelper.attachToRecyclerView(recyclerView);
-
-        //readData();
     }
 
     // init swipe to dismiss logic
-    ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-           List<RowData> dataset = new ArrayList<>();
-           dataset.remove(viewHolder.getAdapterPosition());
-            databaseHelper = new DatabaseHelper(getApplicationContext());
-            db = databaseHelper.getWritableDatabase();
-            //db.execSQL("delete from FOOD_TABLE where price = (select MIN(price) from FOOD_TABLE)");
-            String listname= dataset.get(direction).getFavoriteTitle();
-            Log.i("☆確認", "onSwiped: "+listname);
-            String sqlStr = "delete from StoreTable where store_name = '"+ listname+"'";
-            db.execSQL(sqlStr,null);
-
-            final FavoriteRecycleViewAdapter adapter =new FavoriteRecycleViewAdapter(FavoriteSearch.this,createDataset());
-            adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-        }
-
-        @Override
-        public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
-                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
-        }
-    });
+//    ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+//            ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//        @Override
+//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//           List<RowData> dataset = new ArrayList<>();
+//           ;
+//            Log.i("☆ポジションは", "値は:"+viewHolder.getAdapterPosition());
+//           dataset.remove(viewHolder.getAdapterPosition());
+//            databaseHelper = new DatabaseHelper(getApplicationContext());
+//            db = databaseHelper.getWritableDatabase();
+//            //db.execSQL("delete from FOOD_TABLE where price = (select MIN(price) from FOOD_TABLE)");
+//            String listname= dataset.get(direction).getFavoriteTitle();
+//            Log.i("☆確認", "onSwiped: "+listname);
+//            String sqlStr = "delete from StoreTable where store_name = '"+ listname+"'";
+//            db.execSQL(sqlStr,null);
+//
+//            final FavoriteRecycleViewAdapter adapter =new FavoriteRecycleViewAdapter(FavoriteSearch.this,createDataset());
+//            adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+//        }
+//
+//        @Override
+//        public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+//                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+//                                    int actionState, boolean isCurrentlyActive) {
+//        }
+//    });
 
 
     private List<RowData> createDataset(){
@@ -123,6 +122,17 @@ public class FavoriteSearch extends AppCompatActivity {
             dataset.add(data);
         }
         return dataset;
+    }
+
+    public void MoveSearchResult(String storename){
+        //今ここでエラーに
+//        if (databaseHelper == null) {
+//            databaseHelper = new DatabaseHelper(getApplicationContext());
+//        }
+//        if (db == null) {
+//            db = databaseHelper.getReadableDatabase();
+//        }
+
     }
 
     //フッターボタン押下

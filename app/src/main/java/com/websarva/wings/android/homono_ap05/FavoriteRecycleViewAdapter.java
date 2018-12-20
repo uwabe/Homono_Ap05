@@ -3,6 +3,7 @@ package com.websarva.wings.android.homono_ap05;
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,19 @@ public class FavoriteRecycleViewAdapter extends RecyclerView.Adapter<FavoriteVie
 
 
     @Override
-    public void onBindViewHolder(FavoriteViewHolder holder, int position) {
+    public void onBindViewHolder(FavoriteViewHolder holder, final int position) {
         holder.titleView.setText(list.get(position).getFavoriteTitle());
         holder.linearLayout.setId(holder.getAdapterPosition());
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int clickpos=position;
                 listener.onClick(view);
+                Log.i("☆確認クリック", "ぽじしょん"+ clickpos);
+                Log.i("☆確認クリック", "ポジションから店名"+list.get(clickpos).getFavoriteTitle());
+                String storename = list.get(clickpos).getFavoriteTitle();
+                FavoriteSearch fs =new FavoriteSearch();
+                fs.MoveSearchResult(storename);
             }
         });
     }

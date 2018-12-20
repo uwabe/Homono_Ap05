@@ -160,9 +160,11 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         String placeId;
         String lat;
         String lon;
+        String openNow;
         final String[] placeidlist = new String[4];
         final String[] latlist = new String[4];
         final String[] lonlist = new String[4];
+        final String[] openNowlist = new String[4];
         try {
             boolean iszero = jsonData.contains("ZERO_RESULTS");
             Log.i("☆ステータス", "結果:" + iszero);
@@ -177,20 +179,22 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                     if(i<5) {
                         JSONObject jsonObject_shop = shopList.getJSONObject(i);
                         JSONObject location = jsonObject_shop.getJSONObject("geometry").getJSONObject("location");
-                        //JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
+                        JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
                         placeId = jsonObject_shop.getString("place_id");//店舗ID
                         lat= location.getString("lat");
                         lon= location.getString("lng");
+                        openNow = openingHours.getString("open_now");
                         Log.i("☆ID", placeId);
                         Log.i("☆緯度経度", lat + "," + lon);
                         placeidlist[i] = placeId;
                         latlist[i] = lat;
                         lonlist[i] = lon;
+                        openNowlist[i]=openNow;
                         MarkerOptions opt = new MarkerOptions();
                         //位置情報
                         opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-                        Log.i("☆配列確認1", "何回め:"+i);
-                        Log.i("☆配列確認2", placeidlist[0]+","+latlist[0]+","+lonlist[0]);
+                        //Log.i("☆配列確認1", "何回め:"+i);
+                        //Log.i("☆配列確認2", placeidlist[0]+","+latlist[0]+","+lonlist[0]);
                         Marker marker = googleMap.addMarker(opt);
                         //表示する
                         //marker.showInfoWindow();
@@ -205,30 +209,35 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                                     intent.putExtra("placeId", placeidlist[0]);
                                     intent.putExtra("lat", latlist[0]);
                                     intent.putExtra("lon", lonlist[0]);
+                                    intent.putExtra("openingHours",openNowlist[0]);
                                     startActivity(intent);
                                 } else if (makerid.equals("m1")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
                                     intent.putExtra("placeId", placeidlist[1]);
                                     intent.putExtra("lat", latlist[1]);
                                     intent.putExtra("lon", lonlist[1]);
+                                    intent.putExtra("openingHours",openNowlist[1]);
                                     startActivity(intent);
                                 } else if (makerid.equals("m2")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
                                     intent.putExtra("placeId", placeidlist[2]);
                                     intent.putExtra("lat", latlist[2]);
                                     intent.putExtra("lon", lonlist[2]);
+                                    intent.putExtra("openingHours",openNowlist[2]);
                                     startActivity(intent);
                                 } else if (makerid.equals("m3")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
                                     intent.putExtra("placeId", placeidlist[3]);
                                     intent.putExtra("lat", latlist[3]);
                                     intent.putExtra("lon", lonlist[3]);
+                                    intent.putExtra("openingHours",openNowlist[3]);
                                     startActivity(intent);
                                 } else if (makerid.equals("m4")) {
                                     Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
                                     intent.putExtra("placeId", placeidlist[4]);
                                     intent.putExtra("lat", latlist[4]);
                                     intent.putExtra("lon", lonlist[4]);
+                                    intent.putExtra("openingHours",openNowlist[4]);
                                     startActivity(intent);
                                 }
                                 return false;

@@ -40,27 +40,16 @@ public class PopupInfo extends AppCompatActivity {
         strPlaceId = intent.getStringExtra("placeId");
         strLat = intent.getStringExtra("lat");
         strLon = intent.getStringExtra("lon");
-
+        strOpeningHours = intent.getStringExtra("openingHours");
         shopInfoLoader.execute(strPlaceId);
 
-        //TextView txtStoreName = findViewById(R.id.txtStoreName);
-        //txtStoreName.setText(strShopName);
-        //Log.i("☆結果:", "店名:"+strShopName);
-
-        //TextView txtVicinity = findViewById(R.id.txtVicinity);
-        //txtVicinity.setText(strVicinity);
-        //Log.i("☆結果:", "住所:"+strShopName);
-
-        //TextView txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
-        //txtPhoneNumber.setText(strPhoneNum);
-
-        //TextView txtOpeningHours = findViewById(R.id.txtOpeningNow);
-        //txtOpeningHours.setText(strOpeningHours);
-//        if (strOpeningHours == "true"){
-////            txtOpeningHours.setText("営業中");
-////        }else {
-////            txtOpeningHours.setText("営業時間外");
-////        }
+        TextView txtOpeningHours = findViewById(R.id.txtOpeningNow);
+        txtOpeningHours.setText(strOpeningHours);
+        if (strOpeningHours == "true") {
+            txtOpeningHours.setText("営業中");
+        } else {
+            txtOpeningHours.setText("営業時間外");
+        }
         //登録ボタン
         Button insertButton = findViewById(R.id.button_insert);
         InsertListener insertListener = new InsertListener();
@@ -76,48 +65,40 @@ public class PopupInfo extends AppCompatActivity {
         setStoreInfo(result);
     }
 
-    public void setStoreInfo(String jsonData){
-        try{
-            Log.i("☆ステータス", "結果"+jsonData);
+    public void setStoreInfo(String jsonData) {
+        try {
+            Log.i("☆ステータス", "結果" + jsonData);
             JSONObject jsonObject = new JSONObject(jsonData);
-            //JSONArray shopInfoList = jsonObject.getJSONArray("results");
             JSONObject jsonObject_info = jsonObject.getJSONObject("result");
-            Log.i("☆取得", "結果"+jsonObject_info);
+            Log.i("☆取得", "結果" + jsonObject_info);
             String address = jsonObject_info.getString("formatted_address");
-            address=address.replace("日本、","");
+            address = address.replace("日本、", "");
             String phone_num = jsonObject_info.getString("formatted_phone_number");
             String store_name = jsonObject_info.getString("name");
-            //JSONObject jsonObject_list = jsonObject.getJSONObject("opening_hours");
-            //String week = jsonObject_list.getString("weekday_text");
-            //String hours_array = jsonObject_info.getString("opening_hours");
 
-            //Log.i("☆営業時間", "結果:"+week);
 
-            //String week1 =jsonObject_info.getString("weekday_text");
-
-            Log.i("☆結果:", "住所:"+address+"電話番号:"+phone_num+"店名:"+store_name);
+            Log.i("☆結果:", "住所:" + address + "電話番号:" + phone_num + "店名:" + store_name);
             strShopName = store_name;
             strVicinity = address;
             strPhoneNum = phone_num;
-            //strOpeningHours = weeklist;
             TextView txtStoreName = findViewById(R.id.txtStoreName);
             txtStoreName.setText(strShopName);
             TextView txtVicinity = findViewById(R.id.txtVicinity);
             txtVicinity.setText(strVicinity);
-            Log.i("☆結果:", "住所:"+strShopName);
+            Log.i("☆結果:", "住所:" + strShopName);
             TextView txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
             txtPhoneNumber.setText(strPhoneNum);
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
 
-    private class InsertListener implements View.OnClickListener{
+    private class InsertListener implements View.OnClickListener {
         @Override
-        public void onClick(View view){
+        public void onClick(View view) {
 
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
             SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -127,16 +108,17 @@ public class PopupInfo extends AppCompatActivity {
             String placeId = strPlaceId;
             String lat = strLat;
             String lng = strLon;
-            String sqlselect = "select store_name, place_id, lat, lng from StoreTable where place_id ='"+placeId+"'";
-            Log.i("☆値の確認", "確認"+storeName+","+placeId+","+lat+","+lng);
-            Cursor c = db.rawQuery(sqlselect,null);
-            Log.i("☆確認カーソル", "取れたか:"+c);
+            String sqlselect = "select store_name, place_id, lat, lng from StoreTable where place_id ='" + placeId + "'";
+            Log.i("☆値の確認", "確認" + storeName + "," + placeId + "," + lat + "," + lng);
+            Cursor c = db.rawQuery(sqlselect, null);
+            Log.i("☆確認カーソル", "取れたか:" + c);
             boolean next = c.moveToFirst();
-            if (next){
-                Toast.makeText(PopupInfo.this,"登録済みです", Toast.LENGTH_LONG).show();
+            if (next) {
+                Toast.makeText(PopupInfo.this, "登録済みです", Toast.LENGTH_LONG).show();
                 finish();
-            }else {
+            } else {
                 insertData(db, storeName, placeId, lat, lng);
+                Toast.makeText(PopupInfo.this, "お気に入り登録完了", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
@@ -145,21 +127,22 @@ public class PopupInfo extends AppCompatActivity {
 
     private class BackListener implements View.OnClickListener {
         @Override
-        public void onClick(View view){
+        public void onClick(View view) {
             finish();
         }
 
     }
-    private void insertData(SQLiteDatabase db,String storeName,String placeId,String lat,String lng){
+
+    private void insertData(SQLiteDatabase db, String storeName, String placeId, String lat, String lng) {
 
         ContentValues values = new ContentValues();
         values.put("store_name", storeName);
-        values.put("place_id",placeId);
+        values.put("place_id", placeId);
         values.put("lat", lat);
         values.put("lng", lng);
-        try{
-            db.insert("StoreTable",null,values);
-        }finally {
+        try {
+            db.insert("StoreTable", null, values);
+        } finally {
             db.close();
         }
 
