@@ -39,7 +39,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".PopupInfo"></activity>
+        <activity android:name=".PopupInfo"
+            android:theme="@style/Theme.TranslucentBackground" />
     </application>
 
 </manifest>
