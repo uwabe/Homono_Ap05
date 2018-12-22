@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,19 +43,16 @@ public class PopupInfo extends AppCompatActivity {
         strLat = intent.getStringExtra("lat");
         strLon = intent.getStringExtra("lon");
         strOpeningHours = intent.getStringExtra("openingHours");
-        shopInfoLoader.execute(strPlaceId);
-
+        Log.i("☆intent確認", "きたのは"+strOpeningHours);
+        //Log.i("☆intent確認","onCreate: "+(strOpeningHours.equals("true")));
         TextView txtOpeningHours = findViewById(R.id.txtOpeningNow);
-        txtOpeningHours.setText(strOpeningHours);
-        if (strOpeningHours == "true") {
+        if (strOpeningHours.equals("true")) {
             txtOpeningHours.setText("営業中");
         } else {
             txtOpeningHours.setText("営業時間外");
         }
-        //登録ボタン
-        Button insertButton = findViewById(R.id.button_insert);
-        InsertListener insertListener = new InsertListener();
-        insertButton.setOnClickListener(insertListener);
+        shopInfoLoader.execute(strPlaceId);
+        buttonSelector(strPlaceId);
         //閉じるボタン
         Button backButton = findViewById(R.id.button_back);
         BackListener backListener = new BackListener();
@@ -63,6 +62,29 @@ public class PopupInfo extends AppCompatActivity {
     //onPostExecuteで実行される関数
     public void result_job(String result) {
         setStoreInfo(result);
+    }
+
+    public void buttonSelector(String placeId){
+        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        String sqlselect = "select store_name, place_id, lat, lng from StoreTable where place_id ='" + placeId + "'";
+        Cursor c = db.rawQuery(sqlselect, null);
+        boolean next = c.moveToFirst();
+        if (next) {
+            //登録済ボタン
+            ImageView insertButton=findViewById(R.id.button_insert);
+            insertButton.setImageResource(R.drawable.star2);
+            InsertListener insertListener = new InsertListener();
+            insertButton.setOnClickListener(insertListener);
+        } else {
+            //登録ボタン
+            ImageView insertButton=findViewById(R.id.button_insert);
+            insertButton.setImageResource(R.drawable.star1);
+            InsertListener insertListener = new InsertListener();
+            insertButton.setOnClickListener(insertListener);
+
+        }
+
     }
 
     public void setStoreInfo(String jsonData) {
@@ -102,7 +124,6 @@ public class PopupInfo extends AppCompatActivity {
 
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
             SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
 
             String storeName = strShopName;
             String placeId = strPlaceId;

@@ -35,19 +35,24 @@ public class FavoriteSearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_search);
-        final RecyclerView recyclerView = findViewById(R.id.FavoriteRecyclerView);
-        final FavoriteRecycleViewAdapter adapter =new FavoriteRecycleViewAdapter(this,createDataset());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(createDataset()==null) {
+            //画面に出すのは難しいのでトーストに変更した(2018.11.22MTG　決定)
+            Toast.makeText(FavoriteSearch.this, "お気に入りが登録されていません", Toast.LENGTH_SHORT).show();
+        }else{
+            final RecyclerView recyclerView = findViewById(R.id.FavoriteRecyclerView);
+            final FavoriteRecycleViewAdapter adapter = new FavoriteRecycleViewAdapter(this, createDataset());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                //Toast.makeText(FavoriteSearch.this, "サンプル:",Toast.LENGTH_LONG).show();
-            }
-        });
+                    //Toast.makeText(FavoriteSearch.this, "サンプル:",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     // init swipe to dismiss logic
@@ -95,8 +100,8 @@ public class FavoriteSearch extends AppCompatActivity {
         long selectCount = DatabaseUtils.queryNumEntries(db, "StoreTable");
         //0件の場合
         if (selectCount == 0) {
-            //画面に出すのは難しいのでトーストに変更した(2018.11.22MTG　決定)
-            Toast.makeText(FavoriteSearch.this, "お気に入りが登録されていません", Toast.LENGTH_SHORT).show();
+
+
             return null;
         }
         //1件以上の場合
