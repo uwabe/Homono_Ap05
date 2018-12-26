@@ -19,13 +19,15 @@
             android:layout_marginTop="4dip"
             android:text="@string/bt_menu"
             android:onClick="onMenuButtonClick"
-            android:textColor="#FFffffff" />
+            android:textColor="#FFffffff"
+            android:background="@drawable/buttonstyle"/>
 
         <TextView
             android:id="@+id/btMenu1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="4dip"
+            android:layout_marginLeft="10dp"
             android:textSize="20dp"
             android:textColor="#FFffffff"
             android:text="駅検索じゃよ" />
@@ -101,5 +103,7 @@
         android:layout_marginTop="20dp"
         android:layout_gravity="end"
         android:onClick="onClick"
-        android:text="@string/SearchStartButton"/>
+        android:text="@string/SearchStartButton"
+        android:textColor="#FFffffff"
+        android:background="@drawable/buttonstyle"/>
 </LinearLayout>
