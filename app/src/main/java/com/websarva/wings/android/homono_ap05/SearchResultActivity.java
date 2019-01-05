@@ -253,8 +253,11 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
 
     //フッターボタン押下
     public void onMenuButtonClick(View view) {
+        Intent intent = new Intent(getApplication(), MainMenu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         //メインメニュー画面に戻る
-        finish();
+        //finish();
     }
 
     @Override

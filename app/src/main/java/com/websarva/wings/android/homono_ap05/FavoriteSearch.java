@@ -105,7 +105,7 @@ public class FavoriteSearch extends AppCompatActivity {
             return null;
         }
         //1件以上の場合
-        Cursor c = db.query("StoreTable", new String[]{"store_name", "place_id", "lat", "lng"}, null, null, null, null, null);
+        Cursor c = db.query("StoreTable", new String[]{"store_name", "place_id", "lat", "lng"}, null, null, null, null, "_id"+" DESC");
         c.moveToFirst();
         List<Map<String, String>> fList = new ArrayList<>();
         Map<String, String> fItem;
@@ -113,6 +113,9 @@ public class FavoriteSearch extends AppCompatActivity {
         for (int i = 0; i < c.getCount(); i++) {
             fItem = new HashMap<>();
             fItem.put("store_name", (c.getString(0)));
+            fItem.put("place_id",(c.getString(1)));
+            fItem.put("lat",(c.getString(2)));
+            fItem.put("lng",(c.getString(3)));
             fList.add(fItem);
             c.moveToNext();
         }
@@ -124,12 +127,15 @@ public class FavoriteSearch extends AppCompatActivity {
         for (int i = 0; i < count; i++) {
             RowData data = new RowData();
             data.setFavoriteTitle(fList.get(i).get("store_name"));
+            data.setPlaceid(fList.get(i).get("place_id"));
+            data.setLat(fList.get(i).get("lat"));
+            data.setLng(fList.get(i).get("lng"));
             dataset.add(data);
         }
         return dataset;
     }
 
-    public void MoveSearchResult(String storename){
+    public void MoveSearchResult(String placeid, String lat, String lng){
         //今ここでエラーに
 //        if (databaseHelper == null) {
 //            databaseHelper = new DatabaseHelper(getApplicationContext());
@@ -137,11 +143,21 @@ public class FavoriteSearch extends AppCompatActivity {
 //        if (db == null) {
 //            db = databaseHelper.getReadableDatabase();
 //        }
+        //ここもコンテキストがなんとかってでるーーーーーー
+        Intent intent = new Intent(this, SearchResultActivity.class);
+        intent.putExtra("placeId", placeid);
+        intent.putExtra("lat", lat);
+        intent.putExtra("lon", lng);
+        startActivity(intent);
+
 
     }
 
     //フッターボタン押下
     public void onMenuButtonClick(View view) {
+        Intent intent = new Intent(getApplication(), MainMenu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         //メインメニュー画面に戻る
         finish();
     }

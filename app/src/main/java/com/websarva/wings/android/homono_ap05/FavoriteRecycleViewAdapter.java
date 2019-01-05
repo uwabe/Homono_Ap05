@@ -38,8 +38,12 @@ public class FavoriteRecycleViewAdapter extends RecyclerView.Adapter<FavoriteVie
                 Log.i("☆確認クリック", "ぽじしょん"+ clickpos);
                 Log.i("☆確認クリック", "ポジションから店名"+list.get(clickpos).getFavoriteTitle());
                 String storename = list.get(clickpos).getFavoriteTitle();
+                String placeid =list.get(clickpos).getPlaceid();
+                String lat =list.get(clickpos).getLat();
+                String lng =list.get(clickpos).getLng();
+                Log.i("☆確認クリック", "id:"+placeid+lat+lng);
                 FavoriteSearch fs =new FavoriteSearch();
-                fs.MoveSearchResult(storename);
+                fs.MoveSearchResult(placeid,lat,lng);
             }
         });
     }

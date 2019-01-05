@@ -13,7 +13,6 @@
     <string name="insert">お気に入り登録</string>
     <string name="back">閉じる</string>
     <string name="storename">店舗名:</string>
-    <string name="storeaddress">住所:</string>
-    <string name="phonenum">電話番号:</string>
-    <string name="opennow">現在この店舗は:</string>
+    <string name="storeaddress">住所:　　　</string>
+    <string name="phonenum">電話番号:　</string>
 </resources>
