@@ -14,9 +14,11 @@ public class FavoriteRecycleViewAdapter extends RecyclerView.Adapter<FavoriteVie
 
     private List<RowData> list;
     private View.OnClickListener listener;
+    private FavoriteSearch _fs;
 
     public FavoriteRecycleViewAdapter(FavoriteSearch favoriteSearch, List<RowData> list){
         this.list= list;
+        _fs=favoriteSearch;
     }
     @Override
     public FavoriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,14 +38,14 @@ public class FavoriteRecycleViewAdapter extends RecyclerView.Adapter<FavoriteVie
                 int clickpos=position;
                 listener.onClick(view);
                 Log.i("☆確認クリック", "ぽじしょん"+ clickpos);
-                Log.i("☆確認クリック", "ポジションから店名"+list.get(clickpos).getFavoriteTitle());
-                String storename = list.get(clickpos).getFavoriteTitle();
+                //Log.i("☆確認クリック", "ポジションから店名"+list.get(clickpos).getFavoriteTitle());
+                //String storename = list.get(clickpos).getFavoriteTitle();
                 String placeid =list.get(clickpos).getPlaceid();
                 String lat =list.get(clickpos).getLat();
                 String lng =list.get(clickpos).getLng();
                 Log.i("☆確認クリック", "id:"+placeid+lat+lng);
-                FavoriteSearch fs =new FavoriteSearch();
-                fs.MoveSearchResult(placeid,lat,lng);
+
+                _fs.MoveSearchResult(placeid,lat,lng);
             }
         });
     }

@@ -37,10 +37,14 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         LocationListener, GoogleMap.OnMyLocationButtonClickListener, LocationSource {
 
     private GoogleMap googleMap;
+    private String lon_intent;
+    private String lat_intent;
+    private String place_id_intent;
     private GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
     CameraUpdate cameraUpdate;
     final GoogleDataLoader googleDataLoader = new GoogleDataLoader(this);
+    private int pageParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,24 +69,18 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
         // 現在のintentを取得する
         Intent intent = getIntent();
         // intentから指定キーの文字列を取得する
-        String lon = intent.getStringExtra("result_lon");
-        String lat = intent.getStringExtra("result_lat");
+        lon_intent = intent.getStringExtra("result_lon");
+        lat_intent = intent.getStringExtra("result_lat");
         //画面から渡されるパラメータ 1:現在地、2:お気に入り、3:駅名
-        int pageParam = intent.getIntExtra("page_param", 0);
+        pageParam = intent.getIntExtra("page_param", 0);
         //駅名はplace_idを受け取る？
-        String place_id = intent.getStringExtra("place_id");
-        Log.i("Search1", "現在地:" + lon + "&" + lat);
-        Double lon_d = parseDouble(lon);
-        Double lat_d = parseDouble(lat);
+        place_id_intent = intent.getStringExtra("place_id");
+        Log.i("Search1", "現在地:" + lon_intent + "&" + lat_intent);
+        Double lon_d = parseDouble(lon_intent);
+        Double lat_d = parseDouble(lat_intent);
         Log.i("Search2", "現在地:" + lon_d + "&" + lat_d);
 
         LatLng pos = new LatLng(lat_d, lon_d);
-        //マーカーに関する記述は後で
-        //googleMap.addMarker(new MarkerOptions().position(pos).title("first_pin"));
-        //中心地は各画面から渡された経度と緯度
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-        //cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lat_d, lon_d), 16);
-        //googleMap.moveCamera(cameraUpdate);
         String urlDraft = "";
         //分岐
         switch (pageParam) {
@@ -91,7 +89,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "現在地から来た");
                 // ズームにする
                 zoomMap(googleMap, lat_d, lon_d);
-                urlDraft = lat + "," + lon;
+                urlDraft = lat_intent + "," + lon_intent;
                 //実行
                 googleDataLoader.execute(urlDraft);
                 // 円を描く
@@ -106,7 +104,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "お気に入りから来た");
                 // ズームにする
                 zoomMap(googleMap, lat_d, lon_d);
-                urlDraft = lat + "," + lon;
+                urlDraft = lat_intent + "," + lon_intent;
                 //実行
                 googleDataLoader.execute(urlDraft);
 
@@ -116,7 +114,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("Bunki", "駅から来た");
                 // ズームにする
                 zoomMap(googleMap, lat_d, lon_d);
-                urlDraft = lat + "," + lon;
+                urlDraft = lat_intent + "," + lon_intent;
                 //実行
                 googleDataLoader.execute(urlDraft);
 
@@ -175,6 +173,28 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 Log.i("☆ステータス", "結果" + jsonData);
                 JSONObject jsonObject = new JSONObject(jsonData);
                 JSONArray shopList = jsonObject.getJSONArray("results");
+                Log.i("☆遷移確認", "どこから:" +pageParam);
+                if (pageParam == 2){
+                    JSONObject jsonObject_shop = shopList.getJSONObject(0);
+                    JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
+                    final String open_now = openingHours.getString("open_now");
+                    MarkerOptions opt = new MarkerOptions();
+                    opt.position(new LatLng(parseDouble(lat_intent), parseDouble(lon_intent)));
+                    Marker marker = googleMap.addMarker(opt);
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent intent = new Intent(SearchResultActivity.this, PopupInfo.class);
+                            intent.putExtra("placeId", place_id_intent);
+                            intent.putExtra("lat", lat_intent);
+                            intent.putExtra("lon", lon_intent);
+                            intent.putExtra("openingHours",open_now);
+                            startActivity(intent);
+                            return false;
+                        }//click
+                    });//clicklistener
+                return;
+                }//if
                 for (int i = 0; i < shopList.length(); i++) {
                     if(i<5) {
                         JSONObject jsonObject_shop = shopList.getJSONObject(i);
@@ -193,7 +213,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                         MarkerOptions opt = new MarkerOptions();
                         //位置情報
                         opt.position(new LatLng(parseDouble(lat), parseDouble(lon)));
-                        //Log.i("☆配列確認1", "何回め:"+i);
+
                         //Log.i("☆配列確認2", placeidlist[0]+","+latlist[0]+","+lonlist[0]);
                         Marker marker = googleMap.addMarker(opt);
                         //表示する

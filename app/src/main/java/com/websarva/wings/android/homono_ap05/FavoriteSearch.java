@@ -1,5 +1,6 @@
 package com.websarva.wings.android.homono_ap05;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -30,6 +31,8 @@ public class FavoriteSearch extends AppCompatActivity {
     //String store_name ="";
     private SQLiteDatabase db;
     private DatabaseHelper databaseHelper;
+
+    //public FavoriteSearch(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,13 +147,13 @@ public class FavoriteSearch extends AppCompatActivity {
 //            db = databaseHelper.getReadableDatabase();
 //        }
         //ここもコンテキストがなんとかってでるーーーーーー
-        Intent intent = new Intent(this, SearchResultActivity.class);
-        intent.putExtra("placeId", placeid);
-        intent.putExtra("lat", lat);
-        intent.putExtra("lon", lng);
+        Log.i("☆インテント確認", "値:"+placeid+","+lat+","+lng);
+        Intent intent = new Intent(getApplicationContext(), SearchResultActivity.class);
+        intent.putExtra("place_id", placeid);
+        intent.putExtra("result_lat", lat);
+        intent.putExtra("result_lon", lng);
+        intent.putExtra("page_param",2);
         startActivity(intent);
-
-
     }
 
     //フッターボタン押下
