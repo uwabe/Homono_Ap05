@@ -40,6 +40,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
     private String lon_intent;
     private String lat_intent;
     private String place_id_intent;
+    private String open_now_intent;
     private GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
     CameraUpdate cameraUpdate;
@@ -107,7 +108,6 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 urlDraft = lat_intent + "," + lon_intent;
                 //実行
                 googleDataLoader.execute(urlDraft);
-
                 break;
             //駅名の場合
             case 3:
@@ -177,7 +177,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                 if (pageParam == 2){
                     JSONObject jsonObject_shop = shopList.getJSONObject(0);
                     JSONObject openingHours = jsonObject_shop.getJSONObject("opening_hours");
-                    final String open_now = openingHours.getString("open_now");
+                    open_now_intent = openingHours.getString("open_now");
                     MarkerOptions opt = new MarkerOptions();
                     opt.position(new LatLng(parseDouble(lat_intent), parseDouble(lon_intent)));
                     Marker marker = googleMap.addMarker(opt);
@@ -188,12 +188,20 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
                             intent.putExtra("placeId", place_id_intent);
                             intent.putExtra("lat", lat_intent);
                             intent.putExtra("lon", lon_intent);
-                            intent.putExtra("openingHours",open_now);
+                            intent.putExtra("openingHours",open_now_intent);
                             startActivity(intent);
                             return false;
                         }//click
                     });//clicklistener
-                return;
+                    Log.i("☆あたいは", "place:"+place_id_intent+","+lat_intent+","+lon_intent+","+open_now_intent);
+                Intent it = new Intent(SearchResultActivity.this, PopupInfo.class);
+                    it.putExtra("placeId", place_id_intent);
+                    it.putExtra("lat", lat_intent);
+                    it.putExtra("lon", lon_intent);
+                    it.putExtra("openingHours",open_now_intent);
+                    startActivity(it);
+
+                    return;
                 }//if
                 for (int i = 0; i < shopList.length(); i++) {
                     if(i<5) {
