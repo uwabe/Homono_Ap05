@@ -167,7 +167,7 @@ public class SearchResultActivity extends FragmentActivity implements OnMapReady
             boolean iszero = jsonData.contains("ZERO_RESULTS");
             Log.i("☆ステータス", "結果:" + iszero);
             if (jsonData.contains("ZERO_RESULTS")) {
-                Toast.makeText(SearchResultActivity.this, "店舗がありません", Toast.LENGTH_LONG).show();
+                Toast.makeText(SearchResultActivity.this, "500m範囲内に日高屋がありません。", Toast.LENGTH_LONG).show();
 
             } else {
                 Log.i("☆ステータス", "結果" + jsonData);

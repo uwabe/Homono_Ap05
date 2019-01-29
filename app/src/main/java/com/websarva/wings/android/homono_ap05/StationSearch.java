@@ -150,7 +150,7 @@ public class StationSearch extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         Spinner prefSpinner = findViewById(R.id.PrefSpinner);
         if (prefSpinner.getSelectedItemPosition()==0){
-            Toast.makeText(this, "駅が選択されていません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "駅を選択してください。", Toast.LENGTH_SHORT).show();
         }else{
         Intent intent = new Intent(this,SearchResultActivity.class);
         Log.i("StaButtonClick","現在地:"+ station_lon+ "&" + station_lat);

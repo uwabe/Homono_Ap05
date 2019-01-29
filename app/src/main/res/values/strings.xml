@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">アプリだよーー</string>
-    <string name="menu1">現在地</string>
-    <string name="menu2">お気に入り</string>
-    <string name="menu3">駅から</string>
+    <string name="app_name">アプリ</string>
+    <string name="menu1">現在地から探す</string>
+    <string name="menu2">お気に入り一覧</string>
+    <string name="menu3">駅から探す</string>
     <string name="text1">●駅を選択してください</string>
     <string name="PrefName">都道府県</string>
     <string name="LineName">路線</string>
     <string name="StaName">駅名</string>
     <string name="SearchStartButton">検索する</string>
-    <string name="text2">お気に入りないよ</string>
+    <string name="text2">お気に入りに登録されている店舗がありません</string>
     <string name="bt_menu">メニューへ</string>
     <string name="insert">お気に入り登録</string>
     <string name="back">閉じる</string>

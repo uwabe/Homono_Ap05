@@ -47,9 +47,9 @@ public class PopupInfo extends AppCompatActivity {
         //Log.i("☆intent確認","onCreate: "+(strOpeningHours.equals("true")));
         TextView txtOpeningHours = findViewById(R.id.txtOpeningNow);
         if (strOpeningHours.equals("true")) {
-            txtOpeningHours.setText("営業中");
+            txtOpeningHours.setText("現在営業中");
         } else {
-            txtOpeningHours.setText("営業時間外");
+            txtOpeningHours.setText("現在営業準備中");
         }
         shopInfoLoader.execute(strPlaceId);
         buttonSelector(strPlaceId);
@@ -135,11 +135,11 @@ public class PopupInfo extends AppCompatActivity {
             Log.i("☆確認カーソル", "取れたか:" + c);
             boolean next = c.moveToFirst();
             if (next) {
-                Toast.makeText(PopupInfo.this, "登録済みです", Toast.LENGTH_LONG).show();
+                Toast.makeText(PopupInfo.this, "お気に入り登録済みです", Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 insertData(db, storeName, placeId, lat, lng);
-                Toast.makeText(PopupInfo.this, "お気に入り登録完了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PopupInfo.this, "お気に入り登録しました。", Toast.LENGTH_SHORT).show();
                 finish();
             }
 

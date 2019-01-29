@@ -40,7 +40,7 @@ public class FavoriteSearch extends AppCompatActivity {
         setContentView(R.layout.activity_favorite_search);
         if(createDataset()==null) {
             //画面に出すのは難しいのでトーストに変更した(2018.11.22MTG　決定)
-            Toast.makeText(FavoriteSearch.this, "お気に入りが登録されていません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FavoriteSearch.this, "お気に入り登録されている店舗情報がありません。", Toast.LENGTH_SHORT).show();
         }else{
             final RecyclerView recyclerView = findViewById(R.id.FavoriteRecyclerView);
             final FavoriteRecycleViewAdapter adapter = new FavoriteRecycleViewAdapter(this, createDataset());
@@ -139,14 +139,6 @@ public class FavoriteSearch extends AppCompatActivity {
     }
 
     public void MoveSearchResult(String placeid, String lat, String lng){
-        //今ここでエラーに
-//        if (databaseHelper == null) {
-//            databaseHelper = new DatabaseHelper(getApplicationContext());
-//        }
-//        if (db == null) {
-//            db = databaseHelper.getReadableDatabase();
-//        }
-        //ここもコンテキストがなんとかってでるーーーーーー
         Log.i("☆インテント確認", "値:"+placeid+","+lat+","+lng);
         Intent intent = new Intent(getApplicationContext(), SearchResultActivity.class);
         intent.putExtra("place_id", placeid);
